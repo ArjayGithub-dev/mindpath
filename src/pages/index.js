@@ -7,6 +7,10 @@ import Appointment from "./Appointment";
 import ServiceProviders from "./ServiceProviders";
 import Administrators from "./Administrators";
 import Settings from "./Settings";
+import AddServiceProvider from "./AddServiceProvider";
+import EditServiceProvider from "./EditServiceProvider";
+import ForgotPassword from "./ForgotPassword";
+
 
 
 export {
@@ -19,4 +23,7 @@ export {
   ServiceProviders,
   Administrators,
   Settings,
+  AddServiceProvider,
+  EditServiceProvider,
+  ForgotPassword,
 };

@@ -17,7 +17,7 @@ const Hero = () => {
 
         {/* Paragraph Section */}
         <p className={`${styles.paragraph} font-poppins font-normal text-gray-600 max-w-[850px] mb-10`}>
-          Find licensed therapists and book personalized sessions anytime, anywhere. Whether you’re addressing mental health, stress management, or personal growth, we’re here to support you. Download our app on the Play Store to easily book sessions and manage appointments at your fingertips.
+          Find licensed therapists and book personalized sessions anytime, anywhere. Whether you’re addressing mental health, stress management, or personal growth, we’re here to support you. 
         </p>
       </div>
 

@@ -6,13 +6,13 @@ const Appointment = () => {
   return (
     <section id="trusted-clients" className={`flex flex-col items-center ${styles.paddingY}`}>
       <div className="text-center">
-      <p className="font-poppins font-thin text-white ss:text-[18px] text-[16px] mt-10">
-          Empower Your Practice with Our Innovative App</p>
+      {/* <p className="font-poppins font-thin text-white ss:text-[18px] text-[16px] mt-10">
+          Empower Your Practice with Our Innovative App</p> */}
         <h1 className="font-poppins font-bold ss:text-[48px] text-[38px] text-white mb-4 mt-4">
           Join Our Community of Professional Therapists
         </h1>
         <p className="font-poppins font-light text-white ss:text-[18px] text-[16px]">
-          Join our community of licensed therapists and connect with clients seeking your expertise. 
+          Connect with clients seeking your expertise. 
           Schedule a face-to-face interview to verify your eligibility and start your journey with us!</p>   
       </div>
       <button className="btn btn-wide font-poppins font-bold text-[15px] bg-white text-blue rounded-md m-[50px]" onClick={()=>document.getElementById('my_modal_3').showModal()}>

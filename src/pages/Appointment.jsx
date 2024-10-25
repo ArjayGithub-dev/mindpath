@@ -160,7 +160,7 @@ const Appointment = () => {
             </Typography>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-          <Button variant="text" className="flex items-center gap-3" nClick={getAppointments}>
+          <Button variant="text" className="flex items-center gap-3" onClick={getAppointments}>
             Refresh Table
             <svg
               xmlns="http://www.w3.org/2000/svg"

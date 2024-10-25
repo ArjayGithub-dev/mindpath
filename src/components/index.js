@@ -6,6 +6,9 @@ import CopyRight from "./CopyRight";
 import ScrollToTop from "./ScrollToTop";
 import Sidebar from "./Sidebar";
 import TermsConditions from "./TermsConditions";
+import ServiceProviderList from "./ServiceProviderList";
+import EditSPForm from "./EditSPForm";
+import ProtectedRoute from "./ProtectedRoute";
 
 export {
   Navbar,
@@ -16,4 +19,7 @@ export {
   ScrollToTop,
   Sidebar,
   TermsConditions,
+  ServiceProviderList,
+  EditSPForm,
+  ProtectedRoute,
 };

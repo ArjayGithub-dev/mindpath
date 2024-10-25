@@ -195,7 +195,9 @@ const AppointmentPage = () => {
                   value={suffix}
                   onChange={(e) => setsuffix(e.target.value)}
                 >
-                  <option value="">-- Select Suffix --</option>
+                  <option value="" disabled>
+                    -- Select Suffix --
+                  </option>
                   <option value="Jr.">Jr.</option>
                   <option value="Sr.">Sr.</option>
                   <option value="III">III</option>
@@ -215,7 +217,9 @@ const AppointmentPage = () => {
                   value={gender}
                   onChange={(e) => setgender(e.target.value)}
                 >
-                  <option value="">-- Select Gender --</option>
+                  <option value="" disabled>
+                    -- Select Gender --
+                    </option>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
                 </select>

@@ -1,11 +1,59 @@
 import React, { useState, useEffect } from 'react'; 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Cog6ToothIcon, UserCircleIcon, PowerIcon } from "@heroicons/react/24/solid"; 
 import { Sidebar } from '../components'; 
 import ServiceProvidersDataService from "../services/serviceproviders";
 import AppointmentDataService from "../services/appointment.service";
+import { auth } from '../firebase';
 
 const Dashboard = () => {
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const authChannel = new BroadcastChannel('authChannel');
+
+    const handleLogoutMessage = (event) => {
+      if (event.data === 'logout') {
+        // Clear local storage and redirect to login page
+        localStorage.removeItem('authUser');
+        navigate('/LoginPage');
+      }
+    };
+
+    authChannel.addEventListener('message', handleLogoutMessage);
+
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in, store user info in localStorage
+        localStorage.setItem('authUser', JSON.stringify(user));
+      } else {
+        // User is signed out, remove user info from localStorage
+        localStorage.removeItem('authUser');
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => {
+      authChannel.removeEventListener('message', handleLogoutMessage);
+      unsubscribe();
+    };
+  }, [navigate]);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in, store user info in localStorage
+        localStorage.setItem('authUser', JSON.stringify(user));
+      } else {
+        // User is signed out, remove user info from localStorage
+        localStorage.removeItem('authUser');
+      }
+    });
+        // Cleanup subscription on unmount
+        return () => unsubscribe();
+      }, []);
+
   const [dropdownOpen, setDropdownOpen] = useState(false); // Initialize state for dropdown visibility
   const [serviceProviders, setServiceProviders] = useState([]); // State for service providers
   const [appointments, setAppointments] = useState([]); // State for appointments
@@ -20,7 +68,7 @@ const Dashboard = () => {
     const fetchServiceProviders = async () => {
       setLoadingServiceProviders(true); // Start loading service providers
       try {
-        const snapshot = await ServiceProvidersDataService.getTotalServiceProviders(5); // Fetch 5 service providers
+        const snapshot = await ServiceProvidersDataService.getLimitedServiceProviders(5); // Fetch 5 service providers
         const providersList = [];
         snapshot.forEach((doc) => {
           providersList.push({ id: doc.id, ...doc.data() });

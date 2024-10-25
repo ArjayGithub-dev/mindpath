@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
+import { auth } from "../firebase";
 import { mindpath } from '../assets'; 
-import { Link, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
   List,
@@ -19,6 +20,22 @@ import {
 } from "@heroicons/react/24/solid";
 
 const Sidebar = () => {
+  const navigate = useNavigate(); // Using useNavigate to programmatically navigate
+  
+  async function handleLogout() {
+    localStorage.removeItem('authUser');
+    const authChannel = new BroadcastChannel('authChannel');
+    authChannel.postMessage('logout'); // Notify other tabs to log out
+    // Redirect to the login page
+    try {
+      await auth.signOut();
+      navigate("/LoginPage"); // Programmatically navigate to LoginPage after logout
+      console.log("User logged out successfully");
+    } catch (error) {
+      console.log("Error logging out: ", error.message);
+    }
+  }
+
   return (
     <Card className="h-[calc(100vh)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 flex flex-col justify-between">
       {/* Logo */}
@@ -81,7 +98,7 @@ const Sidebar = () => {
             <ListItemPrefix>
               <PowerIcon className="h-5 w-5" />
             </ListItemPrefix>
-            <Link to="/LoginPage" className="font-poppins">Logout</Link>
+           <Link className="font-poppins" onClick={handleLogout}>Logout</Link>
           </ListItem>
         </List>
       </div>
