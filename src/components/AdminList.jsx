@@ -23,7 +23,7 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 
-import ServiceProvidersDataService from "../services/serviceproviders";
+import AdminDataService from "../services/admin";
 
 const TABS = [
   {
@@ -40,53 +40,53 @@ const TABS = [
   },
 ];
 
-const TABLE_HEAD = ["Fullname", "Profession", "Status", "Clinic Address & Time", "Actions"];
+const TABLE_HEAD = ["Fullname", "Status", "Actions"];
 
-const ServiceProviderList = () => {
+const AdminList = () => {
 
-  const [setServiceProviderID] = useState("");
+  const [setAdminID] = useState("");
 
-  const getServiceProviderIDHandler = (uid) => {
+  const getAdminIDHandler = (uid) => {
     console.log("The ID of document to be edited", uid);
-    setServiceProviderID(uid);
+    setAdminID(uid);
   }
 
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteSuccessOpen, setDeleteSuccessOpen] = useState(false); // State for success modal
-  const [serviceProviders, setServiceProviders] = useState([]);
+  const [Admin, setAdmin] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const providersPerPage = 5;
-  const [providerToDelete, setProviderToDelete] = useState(null); // Track provider to delete
+  const adminsPerPage = 5;
+  const [adminToDelete, setAdminToDelete] = useState(null); // Track provider to delete
 
   useEffect(() => {
-    getServiceProviders();
+    getAdmins();
   }, []);
 
-  const getServiceProviders = async () => {
-    const data = await ServiceProvidersDataService.getAllServiceProviders();
+  const getAdmins = async () => {
+    const data = await AdminDataService.getAllAdmins();
     console.log(data.docs);
-    setServiceProviders(data.docs.map((doc) => ({ ...doc.data(), id: doc.id, uid: doc.data().uid })));
+    setAdmin(data.docs.map((doc) => ({ ...doc.data(), id: doc.id, uid: doc.data().uid })));
   };
 
   const deleteHandler = async (uid) => {
-    await ServiceProvidersDataService.deleteServiceProvider(uid);
+    await AdminDataService.deleteAdmin(uid);
     setDeleteOpen(false); // Close delete confirmation modal
     setDeleteSuccessOpen(true); // Open success modal
-    getServiceProviders(); // Refresh the service provider list
+    getAdmins(); // Refresh the service provider list
   };
 
   const handleDeleteOpen = (uid) => {
-    setProviderToDelete(uid); // Set the provider ID to delete
+    setAdminToDelete(uid); // Set the provider ID to delete
     setDeleteOpen(true);
   };
 
   // Pagination logic
-  const indexOfLastProvider = currentPage * providersPerPage;
-  const indexOfFirstProvider = indexOfLastProvider - providersPerPage;
-  const currentProviders = serviceProviders.slice(indexOfFirstProvider, indexOfLastProvider);
+  const indexOfLastAdmin = currentPage * adminsPerPage;
+  const indexOfFirstAdmin = indexOfLastAdmin - adminsPerPage;
+  const currentAdmins = Admin.slice(indexOfFirstAdmin, indexOfLastAdmin);
 
   const nextPage = () => {
-    if (currentPage < Math.ceil(serviceProviders.length / providersPerPage)) {
+    if (currentPage < Math.ceil(Admin.length / adminsPerPage)) {
       setCurrentPage(currentPage + 1);
     }
   };
@@ -97,11 +97,12 @@ const ServiceProviderList = () => {
     }
   };
 
+
   return (
     <div className="flex h-screen">
       {/* Main content */}
       <main className="flex-1 px-6 py-4">
-        <h1 className="font-poppins text-[24px] text-black font-bold mb-6">Service Providers</h1>
+        <h1 className="font-poppins text-[24px] text-black font-bold mb-6">Admins</h1>
 
         <Card className="w-full">
           <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -111,11 +112,11 @@ const ServiceProviderList = () => {
                   Members list
                 </Typography>
                 <Typography color="gray" className="mt-1 font-normal">
-                  See information about all service providers
+                  See information about all admins
                 </Typography>
               </div>
               <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-                <Button variant="text" className="flex items-center gap-3" onClick={getServiceProviders}>
+                <Button variant="text" className="flex items-center gap-3" onClick={getAdmins}>
                   Refresh Table
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -133,9 +134,9 @@ const ServiceProviderList = () => {
                   </svg>
                 </Button>
                 <Button variant="outlined" className="flex items-center gap-3" size="sm">
-                  <Link to="/AddServiceProvider" className="flex items-center gap-2">
+                  <Link to="/AddAdmin" className="flex items-center gap-2">
                     <UserPlusIcon strokeWidth={2} className="h-4 w-4" />
-                    <span>Add Service Provider</span>
+                    <span>Add New Admin</span>
                   </Link>
                 </Button>
               </div>
@@ -184,8 +185,8 @@ const ServiceProviderList = () => {
               </thead>
 
               <tbody>
-                {currentProviders.map((doc, index) => {
-                  const isLast = index === currentProviders.length - 1;
+                {currentAdmins.map((doc, index) => {
+                  const isLast = index === currentAdmins.length - 1;
                   const classes = isLast
                     ? "p-4"
                     : "p-4 border-b border-blue-gray-50";
@@ -215,18 +216,6 @@ const ServiceProviderList = () => {
                       </td>
 
                       <td className={classes}>
-                        <div className="flex flex-col">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {doc.profession}
-                          </Typography>
-                        </div>
-                      </td>
-
-                      <td className={classes}>
                         <div className="w-max">
                         <Typography
                             variant="small"
@@ -239,30 +228,12 @@ const ServiceProviderList = () => {
                         </div>
                       </td>
 
-                      <td className={classes}>
-                        <div className="flex flex-col">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {doc.clinicAddress}
-                          </Typography>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {doc.clinicTime}
-                          </Typography>
-                        </div>
-                      </td>
 
                       <td className={classes}>
                         <Tooltip content="View or Update Account">
                           <IconButton variant="text">
                           <Link 
-                            to={`/EditServiceProvider/${doc.uid}`}  // Pass the ID as a URL parameter
+                            to={`/EditAdmin/${doc.uid}`}  // Pass the ID as a URL parameter
                             className="flex items-center gap-2"
                           >
                             <PencilIcon className="h-4 w-4" />
@@ -287,13 +258,13 @@ const ServiceProviderList = () => {
 
             <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
               <Typography variant="small" color="blue-gray" className="font-normal">
-              Page {currentPage} of {Math.ceil(serviceProviders.length / providersPerPage)}
+              Page {currentPage} of {Math.ceil(Admin.length / adminsPerPage)}
               </Typography>
               <div className="flex gap-2">
                 <Button variant="text" size="sm" onClick={prevPage} disabled={currentPage === 1}>
                   Previous
                 </Button>
-                <Button variant="outlined" size="sm" onClick={nextPage} disabled={currentPage === Math.ceil(serviceProviders.length / providersPerPage)}>
+                <Button variant="outlined" size="sm" onClick={nextPage} disabled={currentPage === Math.ceil(Admin.length / adminsPerPage)}>
                   Next
                 </Button>
               </div>
@@ -311,7 +282,7 @@ const ServiceProviderList = () => {
             <Button variant="text" color="gray" onClick={() => setDeleteOpen(false)}>
               Cancel
             </Button>
-            <Button variant="outlined" color="red" onClick={() => deleteHandler(providerToDelete)}>
+            <Button variant="outlined" color="red" onClick={() => deleteHandler(adminToDelete)}>
               Delete
             </Button>
           </DialogFooter>
@@ -334,4 +305,4 @@ const ServiceProviderList = () => {
   );
 };
 
-export default ServiceProviderList;
+export default AdminList;

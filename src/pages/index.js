@@ -10,7 +10,9 @@ import Settings from "./Settings";
 import AddServiceProvider from "./AddServiceProvider";
 import EditServiceProvider from "./EditServiceProvider";
 import ForgotPassword from "./ForgotPassword";
-
+import EditClientAppointment from "./EditClientAppointment";
+import AddAdmin from "./AddAdmin";
+import EditAdmin from "./EditAdmin";
 
 
 export {
@@ -26,4 +28,7 @@ export {
   AddServiceProvider,
   EditServiceProvider,
   ForgotPassword,
+  EditClientAppointment,
+  EditAdmin,
+  AddAdmin,
 };

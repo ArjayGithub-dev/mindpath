@@ -364,7 +364,7 @@ const AppointmentPage = () => {
         )}
 
         {/* Footer Section */}
-        <div className={`bg-dirtywhite ${styles.paddingX}`}>
+        <div className={`bg-dirtywhite ${styles.paddingX} ${styles.flexStart} `}>
           <div className={`${styles.boxWidth}`}>
             <Footer />
           </div>

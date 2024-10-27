@@ -69,67 +69,73 @@ const AddServiceProvider = () => {
     
         // Validate required fields
         if (
-        firstName === "" || 
-        surName === "" || 
-        gender === "" || 
-        email === "" ||
-        region === "" ||
-        province === "" ||
-        cityMunicipality === "" ||
-        barangay === "" ||
-        profession === "" ||
-        licenseNo === "" ||
-        clinicAddress === "" ||
-        clinicTime === ""
-
+            firstName === "" || 
+            surName === "" || 
+            gender === "" || 
+            email === "" ||
+            region === "" ||
+            province === "" ||
+            cityMunicipality === "" ||
+            barangay === "" ||
+            profession === "" ||
+            licenseNo === "" ||
+            clinicAddress === "" ||
+            clinicTime === ""
         ) {
-          setMessage({ error: true, msg: "Alert: You must fill in all required fields marked with an asterisk (*) to proceed with your submission." });
-          return;
+            setMessage({ error: true, msg: "Alert: You must fill in all required fields marked with an asterisk (*) to proceed with your submission." });
+            return;
         }
     
-
-          // Check if email already exists
+        // Check if email already exists
         const emailExists = await checkEmailExists(email);
         if (emailExists) {
             setMessage({ error: true, msg: "Email already exists. Please use a different email." });
             return;
         }
-        
+    
         // Generate a 7-character password
         const password = generatePassword(7);
-
+    
         const newServiceProvider = {
-        firstName,
-        middleName,
-        surName,
-        gender,
-        email,
-        suffix,
-        region,
-        province,
-        cityMunicipality,
-        barangay,
-        profession,
-        licenseNo,
-        clinicAddress,
-        clinicTime,
-        userType: "serviceProvider",
-        accountStatus: "ACTIVE",
-        password, // Include the generated password
+            firstName,
+            middleName,
+            surName,
+            gender,
+            email,
+            suffix,
+            region,
+            province,
+            cityMunicipality,
+            barangay,
+            profession,
+            licenseNo,
+            clinicAddress,
+            clinicTime,
+            userType: "THERAPIST",
+            accountStatus: "ACTIVE",
+            password, // Include the generated password
         };
     
         try {
-          await createUserWithEmailAndPassword(auth, email, password);
-          const user = auth.currentUser;
-          console.log(user)
-          console.log("User Registered Successfully!!")
-          await ServiceProvidersDataService.addServiceProvider(newServiceProvider);
-          setMessage({ error: false, msg: "Account Created Successfully!" });
-          setNewAccountEmail(email); // Set the new account email
-          setNewAccountPassword(password); // Set the new account password
-          setIsModalOpen(true); // Open the modal on successful submission
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            const uid = user.uid; // Capture the UID from Firebase Auth
+    
+            // Add the UID to the newServiceProvider object
+            newServiceProvider.uid = uid;
+    
+            console.log(user);
+            console.log("User Registered Successfully!!");
+    
+            // Pass the UID to the addServiceProvider function
+            await ServiceProvidersDataService.addServiceProvider(newServiceProvider);
+    
+            setMessage({ error: false, msg: "Account Created Successfully!" });
+            setNewAccountEmail(email); // Set the new account email
+            setNewAccountPassword(password); // Set the new account password
+            setIsModalOpen(true); // Open the modal on successful submission
         } catch (err) {
-          setMessage({ error: true, msg: err.message });
+            setMessage({ error: true, msg: err.message });
         }
     
         // Clear form fields after submission
@@ -147,7 +153,7 @@ const AddServiceProvider = () => {
         setlicenseNo("");
         setclinicAddress("");
         setclinicTime("");
-      };
+    };
 
         // Scroll to the top when there is an error message
         useEffect(() => {

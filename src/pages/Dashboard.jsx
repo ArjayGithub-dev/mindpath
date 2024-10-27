@@ -4,6 +4,7 @@ import { Cog6ToothIcon, UserCircleIcon, PowerIcon } from "@heroicons/react/24/so
 import { Sidebar } from '../components'; 
 import ServiceProvidersDataService from "../services/serviceproviders";
 import AppointmentDataService from "../services/appointment.service";
+import AdminDataService from "../services/admin";
 import { auth } from '../firebase';
 
 const Dashboard = () => {
@@ -57,8 +58,10 @@ const Dashboard = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false); // Initialize state for dropdown visibility
   const [serviceProviders, setServiceProviders] = useState([]); // State for service providers
   const [appointments, setAppointments] = useState([]); // State for appointments
+  const [admins, setAdmins] = useState([]); // State for appointments
   const [loadingServiceProviders, setLoadingServiceProviders] = useState(true); // State for loading service providers
   const [loadingAppointments, setLoadingAppointments] = useState(true); // State for loading appointments
+  const [loadingAdmins, setLoadingAdmins] = useState(true); // State for loading appointments
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen); // Toggle dropdown visibility
@@ -97,8 +100,25 @@ const Dashboard = () => {
       }
     };
 
+    const fetchAdmins = async () => {
+      setLoadingAdmins(true); // Start loading service providers
+      try {
+        const snapshot = await AdminDataService.getLimitedAdmins(5); // Fetch 5 service providers
+        const adminsList = [];
+        snapshot.forEach((doc) => {
+          adminsList.push({ id: doc.id, ...doc.data() });
+        });
+        setAdmins(adminsList); // Update state with fetched data
+      } catch (error) {
+        console.error("Error fetching admins: ", error);
+      } finally {
+        setLoadingAdmins(false); // Stop loading service providers
+      }
+    };
+
     fetchServiceProviders();
     fetchAppointments();
+    fetchAdmins();
   }, []);
 
   return (
@@ -174,9 +194,9 @@ const Dashboard = () => {
             {/* Card 3 - Administrators */}
             <div className="card bg-base-100 w-full shadow-xl font-poppins">
               <div className="card-body">
-                <h2 className="card-title">Administrators</h2>
-                <h1 className="text-[50px] font-bold">0</h1>
-                <p>Active Administrators</p>
+              <h2 className="card-title text-black-600/2">Administrators</h2>
+              <h1 className="text-[50px] font-bold">{loadingAdmins ? "..." : admins.length}</h1>
+              <p>{loadingAdmins ? "Loading..." : `${admins.length} Active Service Providers`}</p>
               </div>
             </div>
           </div>

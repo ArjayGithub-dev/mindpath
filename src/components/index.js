@@ -9,6 +9,12 @@ import TermsConditions from "./TermsConditions";
 import ServiceProviderList from "./ServiceProviderList";
 import EditSPForm from "./EditSPForm";
 import ProtectedRoute from "./ProtectedRoute";
+import AppointmentList from "./AppointmentList";
+import EditClientAppointmentForm from "./EditClientAppointmentForm";
+import EditAdminForm from "./EditAdminForm";
+import AdminList from "./AdminList";
+
+
 
 export {
   Navbar,
@@ -22,4 +28,8 @@ export {
   ServiceProviderList,
   EditSPForm,
   ProtectedRoute,
+  AppointmentList,
+  EditClientAppointmentForm,
+  EditAdminForm,
+  AdminList,
 };

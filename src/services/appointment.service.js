@@ -8,39 +8,68 @@ import {
     deleteDoc, 
     doc,
     query,
+    where,
     limit
 } from "firebase/firestore";
 
-const appointmentCollectionRef = collection(db, "interviewAppointments")
+// Reference to the 'interviewAppointments' collection
+const appointmentCollectionRef = collection(db, "interviewAppointments");
 
-class ApppointmentDataService {
+class AppointmentDataService {
+    // Add a new appointment
     addAppointment = (newAppointment) => {
         return addDoc(appointmentCollectionRef, newAppointment);
     };
 
-    updateAppointment = (id, updatedAppointment) => {
+    // Update an existing appointment
+    updateAppointment = async (id, updatedAppointment) => {
         const appointmentDoc = doc(db, "interviewAppointments", id);
-        return updateDoc(appointmentDoc, updatedAppointment);
+        const docSnap = await getDoc(appointmentDoc);
+
+        // Check if the document exists
+        if (docSnap.exists()) {
+            return updateDoc(appointmentDoc, updatedAppointment);
+        } else {
+            throw new Error("Appointment not found");
+        }
     };
 
-    deleteAppointment = (id) => {
+    // Delete an appointment
+    deleteAppointment = async (id) => {
         const appointmentDoc = doc(db, "interviewAppointments", id);
-        return deleteDoc(appointmentDoc)
+        const docSnap = await getDoc(appointmentDoc);
+
+        // Check if the document exists
+        if (docSnap.exists()) {
+            return deleteDoc(appointmentDoc);
+        } else {
+            throw new Error("Appointment not found");
+        }
     };
 
-    getAllAppointments = () => {
-        return getDocs(appointmentCollectionRef);
+    // Fetch all appointments
+    getAllAppointments = async () => {
+        return await getDocs(appointmentCollectionRef);
     };
 
-    getAppointment = (id) => {
+    // Fetch a specific appointment by ID
+    getAppointment = async (id) => {
         const appointmentDoc = doc(db, "interviewAppointments", id);
-        return getDoc(appointmentDoc);
+        const docSnap = await getDoc(appointmentDoc);
+
+        // Check if the document exists
+        if (docSnap.exists()) {
+            return docSnap;
+        } else {
+            throw new Error("Appointment not found");
+        }
     };
 
+    // Fetch limited appointments
     getTotalAppointments = async (limitNumber) => {
         const q = query(appointmentCollectionRef, limit(limitNumber));
         return await getDocs(q);
     };
 }
 
-export default new ApppointmentDataService();
+export default new AppointmentDataService();

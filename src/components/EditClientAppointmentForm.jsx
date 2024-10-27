@@ -7,17 +7,17 @@ import {
 } from "@material-tailwind/react";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid"; 
 
-import ServiceProvidersDataService from "../services/serviceproviders";
+import AppointmentDataService from "../services/appointment.service"
 
-const EditSPForm = ({ uid }) => {
+const EditClientAppointmentForm = ({ id }) => {
 
   const [message, setMessage] = useState({ error: false, msg: "" });
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
   
   // State variables...
-  const [firstName, setfirstName] = useState("");
-  const [middleName, setmiddleName] = useState("");
-  const [surName, setsurName] = useState("");
+  const [firstname, setfirstname] = useState("");
+  const [middlename, setmiddlename] = useState("");
+  const [surname, setsurname] = useState("");
   const [email, setemail] = useState("");
   const [suffix, setsuffix] = useState("");
   const [gender, setgender] = useState("");
@@ -25,25 +25,35 @@ const EditSPForm = ({ uid }) => {
   const [province, setprovince] = useState("");
   const [cityMunicipality, setcityMunicipality] = useState("");
   const [barangay, setbarangay] = useState("");
-  const [profession, setprofession] = useState("");
-  const [licenseNo, setlicenseNo] = useState("");
-  const [clinicAddress, setclinicAddress] = useState("");
-  const [clinicTime, setclinicTime] = useState("");
-  
+  // const [dateTime, setdateTime] = useState("");
+  const [status, setstatus] = useState("");
+  // const [isAgree, setisAgree] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
 
     // Validate required fields
-    if (firstName === ""|| surName === "" || gender === "" || email === "" || region === "" || province === "" || cityMunicipality === "" || barangay === "" || profession === "" || licenseNo === "" || clinicAddress === "" || clinicTime === "") {
+    if (
+      firstname === "" || 
+      surname === "" || 
+      gender === "" || 
+      email === "" ||
+      region === "" ||
+      province === "" ||
+      cityMunicipality === "" ||
+      barangay === "" ||
+      // dateTime === "" ||
+      status === "" 
+    ) {
       setMessage({ error: true, msg: "Alert: You must fill in all required fields marked with an asterisk (*) to proceed with your submission." });
       return;
     }
 
-    const updatedServiceProvider = { 
-      firstName,
-      middleName,
-      surName,
+    const updatedAppointment = {
+      firstname,
+      middlename,
+      surname,
       gender,
       email,
       suffix,
@@ -51,33 +61,29 @@ const EditSPForm = ({ uid }) => {
       province,
       cityMunicipality,
       barangay,
-      profession,
-      licenseNo,
-      clinicAddress,
-      clinicTime,
-      userType: "serviceProvider",
-    //   accountStatus,
+      // dateTime,
+      // isAgree,
+      status,
     };
 
     try {
-      // Use the update function 
-      await ServiceProvidersDataService.updateServiceProvider(uid, updatedServiceProvider); 
-      setMessage({ error: false, msg: "Service Provider updated successfully!" });
+      await AppointmentDataService.updateAppointment(id, updatedAppointment);
+      setMessage({ error: false, msg: "Appointment Updated Successfully!" });
       setIsModalOpen(true); // Open the modal on successful submission
     } catch (err) {
       setMessage({ error: true, msg: err.message });
     }
-  };
+  }; 
 
-  // Fetch data for editing
+      // Fetch data for editing
   const editHandler = async () => {
     setMessage("");
     try {
-      const docSnap = await ServiceProvidersDataService.getServiceProvider(uid);
+      const docSnap = await AppointmentDataService.getAppointment(id);
       console.log("The record is:", docSnap.data());
-      setfirstName(docSnap.data().firstName); 
-      setmiddleName(docSnap.data().middleName); 
-      setsurName(docSnap.data().surName); 
+      setfirstname(docSnap.data().firstname); 
+      setmiddlename(docSnap.data().middlename); 
+      setsurname(docSnap.data().surname); 
       setgender(docSnap.data().gender); 
       setemail(docSnap.data().email); 
       setsuffix(docSnap.data().suffix); 
@@ -85,24 +91,20 @@ const EditSPForm = ({ uid }) => {
       setprovince(docSnap.data().province); 
       setcityMunicipality(docSnap.data().cityMunicipality); 
       setbarangay(docSnap.data().barangay); 
-      setprofession(docSnap.data().profession); 
-      setlicenseNo(docSnap.data().licenseNo); 
-      setclinicAddress(docSnap.data().clinicAddress); 
-      setclinicTime(docSnap.data().clinicTime);
+      setstatus(docSnap.data().status); 
+      // setisAgree(docSnap.data().isAgree); 
     } catch (err) {
       setMessage({ error: true, msg: err.message });
     }
   };
 
   useEffect(() => {
-    console.log("The ID here is:", uid);
-    if (uid) {
+    console.log("The ID here is:", id);
+    if (id) {
       editHandler();
     }
-  }, [uid]);
-  
-  
-  
+  }, [id]);
+
   return (
     <div className="flex h-screen">
               {/* Main content */}
@@ -128,13 +130,13 @@ const EditSPForm = ({ uid }) => {
             )}
 
             <button className="flex items-center gap-3 mb-4 font-poppins text-thin" size="sm">
-                <Link to="/ServiceProviders" className="flex items-center gap-2">
+                <Link to="/Appointment" className="flex items-center gap-2">
                 <ChevronLeftIcon strokeWidth={2} className="h-4 w-4" />
                 <span>Back</span>
                 </Link>
             </button>
 
-            <h1 className="text-[24px] text-black font-bold mb-6">Update Service Provider</h1>
+            <h1 className="text-[24px] text-black font-bold mb-6">Interviewee Information</h1>
             <form className="" onSubmit={handleSubmit}>
                 <Typography variant="h6" className="font-light text-[20px] mb-2 text-[#B8B7B7]">
                     Personal Information
@@ -146,9 +148,9 @@ const EditSPForm = ({ uid }) => {
                         </Typography>
                         <Input
                             type="text"
-                            uid="firstName"
-                            value={firstName}
-                            onChange={(e) => setfirstName(e.target.value)}
+                            id="firstname"
+                            value={firstname}
+                            onChange={(e) => setfirstname(e.target.value)}
                             size="lg"
                             placeholder="Firstname"
                             className="!border-t-blue-gray-200 focus:!border-t-gray-900"
@@ -163,9 +165,9 @@ const EditSPForm = ({ uid }) => {
                         </Typography>
                         <Input
                             type="text"
-                            uid="middleName"
-                            value={middleName}
-                            onChange={(e) => setmiddleName(e.target.value)}
+                            id="middlename"
+                            value={middlename}
+                            onChange={(e) => setmiddlename(e.target.value)}
                             size="lg"
                             placeholder="Middlename"
                             className="!border-t-blue-gray-200 focus:!border-t-gray-900"
@@ -180,9 +182,9 @@ const EditSPForm = ({ uid }) => {
                         </Typography>
                         <Input
                             type="text"
-                            uid="surName"
-                            value={surName}
-                            onChange={(e) => setsurName(e.target.value)}
+                            id="surname"
+                            value={surname}
+                            onChange={(e) => setsurname(e.target.value)}
                             size="lg"
                             placeholder="Surname"
                             className="!border-t-blue-gray-200 focus:!border-t-gray-900"
@@ -196,7 +198,7 @@ const EditSPForm = ({ uid }) => {
                                 Suffix 
                             </Typography>
                             <select
-                                uid="gender"
+                                id="gender"
                                 value={suffix}
                                 onChange={(e) => setsuffix(e.target.value)}
                                 className="w-full border border-t-blue-gray-200  focus:border-t-gray-900 px-4 py-2 rounded-lg text-gray-700"
@@ -210,7 +212,7 @@ const EditSPForm = ({ uid }) => {
                                 <option value="IV">IV</option>
                                 <option value="V">V</option>
                             </select>
-                        </div>                    
+                        </div>                 
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2  gap-4 mt-4">
                         <div>
@@ -219,7 +221,7 @@ const EditSPForm = ({ uid }) => {
                             </Typography>
                             <Input
                             type="text"
-                                uid="email"
+                                id="email"
                                 value={email}
                                 onChange={(e) => setemail(e.target.value)}
                                 size="lg"
@@ -235,7 +237,7 @@ const EditSPForm = ({ uid }) => {
                                 Gender <span className="text-red-500">*</span>
                             </Typography>
                             <select
-                                uid="gender"
+                                id="gender"
                                 value={gender}
                                 onChange={(e) => setgender(e.target.value)}
                                 className="w-full border border-t-blue-gray-200 focus:border-t-gray-900 px-4 py-2 rounded-lg text-gray-700"
@@ -258,7 +260,7 @@ const EditSPForm = ({ uid }) => {
                         </Typography>
                         <Input
                         type="text"
-                            uid="region"
+                            id="region"
                             value={region}
                             onChange={(e) => setregion(e.target.value)}
                             size="lg"
@@ -275,7 +277,7 @@ const EditSPForm = ({ uid }) => {
                         </Typography>
                         <Input
                             type="text"
-                            uid="province"
+                            id="province"
                             value={province}
                             onChange={(e) => setprovince(e.target.value)}
                             size="lg"
@@ -292,7 +294,7 @@ const EditSPForm = ({ uid }) => {
                         </Typography>
                         <Input
                             type="text"
-                            uid="cityMunicipality"
+                            id="cityMunicipality"
                             value={cityMunicipality}
                             onChange={(e) => setcityMunicipality(e.target.value)}
                             size="lg"
@@ -309,7 +311,7 @@ const EditSPForm = ({ uid }) => {
                         </Typography>
                         <Input
                             type="text"
-                            uid="barangay"
+                            id="barangay"
                             value={barangay}
                             onChange={(e) => setbarangay(e.target.value)}
                             size="lg"
@@ -322,86 +324,35 @@ const EditSPForm = ({ uid }) => {
                     </div>
                 </div>
                 <Typography variant="h6" className="font-light text-[20px] mb-2 mt-4 text-[#B8B7B7]">
-                    Field Information
+                    Appointment Status
                 </Typography>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                        <Typography variant="h6" color="blue-gray" className="mb-2">
-                            Profession/Role <span className="text-red-500">*</span>
-                        </Typography>
-                        <Input
-                            type="text"
-                            uid="profession"
-                            value={profession}
-                            onChange={(e) => setprofession(e.target.value)}
-                            size="lg"
-                            placeholder="Profession/Role"
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                            labelProps={{
-                                className: "before:content-none after:content-none",
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <Typography variant="h6" color="blue-gray" className="mb-2">
-                            License Number <span className="text-red-500">*</span>
-                        </Typography>
-                        <Input
-                            type="text"
-                            uid="licenseNo"
-                            value={licenseNo}
-                            onChange={(e) => setlicenseNo(e.target.value)}
-                            size="lg"
-                            placeholder="License Number"
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                            labelProps={{
-                                className: "before:content-none after:content-none",
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <Typography variant="h6" color="blue-gray" className="mb-2">
-                            Clinic Address <span className="text-red-500">*</span>
-                        </Typography>
-                        <Input
-                            type="text"
-                            uid="clinicAddress"
-                            value={clinicAddress}
-                            onChange={(e) => setclinicAddress(e.target.value)}
-                            size="lg"
-                            placeholder="Clinic Time"
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                            labelProps={{
-                                className: "before:content-none after:content-none",
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <Typography variant="h6" color="blue-gray" className="mb-2">
-                            Clinic Time <span className="text-red-500">*</span>
-                        </Typography>
-                        <Input
-                            type="text"
-                            uid="clinicTime"
-                            value={clinicTime}
-                            onChange={(e) => setclinicTime(e.target.value)}
-                            size="lg"
-                            placeholder="Clinic Time"
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                            labelProps={{
-                                className: "before:content-none after:content-none",
-                            }}
-                        />
-                    </div>
-                </div>
-                <Button type="submit" variant="outlined" className="mt-8">Update Account</Button>
+                        <div>
+                            <Typography variant="h6" color="blue-gray" className="mb-2">
+                                Status <span className="text-red-500">*</span>
+                            </Typography>
+                            <select
+                                id="status"
+                                value={status}
+                                onChange={(e) => setstatus(e.target.value)}
+                                className="w-full border border-t-blue-gray-200 focus:border-t-gray-900 px-4 py-2 rounded-lg text-gray-700"
+                            >
+                                <option value="Upcoming" disabled>Upcoming</option>
+                                <option value="Done">Done</option>
+                                <option value="Ongoing">Ongoing</option>
+                                <option value="No Show">No Show</option>
+                            </select>
+                        </div>   
+                       </div>                
+
+                <Button type="submit" variant="outlined" className="mt-8">Update Appointment</Button>
             </form>
             {/* Modal Confirmation */}
             {isModalOpen && (
             <div className="fixed inset-0 flex items-center justify-center z-50">
                 <div className="modal modal-open">
                 <div className="modal-box">
-                    <h2 className="font-poppins font-bold text-lg py-4">Account Updated🎉</h2>
+                    <h2 className="font-poppins font-bold text-lg py-4">Appointment Updated🎉</h2>
                     <div className="modal-action">
                     <button className="btn" onClick={() => setIsModalOpen(false)}>Close</button>
                     </div>
@@ -414,4 +365,4 @@ const EditSPForm = ({ uid }) => {
   )
 }
 
-export default EditSPForm;
+export default EditClientAppointmentForm;

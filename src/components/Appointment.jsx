@@ -38,9 +38,7 @@ const Appointment = () => {
             <Link to="/AppointmentPage">Schedule Interview</Link>
         </li>
         </div>
-        
       </dialog>
-
     </section>
   )
 }

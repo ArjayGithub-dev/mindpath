@@ -7,9 +7,9 @@ import {
 } from "@material-tailwind/react";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid"; 
 
-import ServiceProvidersDataService from "../services/serviceproviders";
+import AdminDataService from "../services/admin";
 
-const EditSPForm = ({ uid }) => {
+const EditAdminForm = ({ uid }) => {
 
   const [message, setMessage] = useState({ error: false, msg: "" });
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
@@ -25,22 +25,18 @@ const EditSPForm = ({ uid }) => {
   const [province, setprovince] = useState("");
   const [cityMunicipality, setcityMunicipality] = useState("");
   const [barangay, setbarangay] = useState("");
-  const [profession, setprofession] = useState("");
-  const [licenseNo, setlicenseNo] = useState("");
-  const [clinicAddress, setclinicAddress] = useState("");
-  const [clinicTime, setclinicTime] = useState("");
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
 
     // Validate required fields
-    if (firstName === ""|| surName === "" || gender === "" || email === "" || region === "" || province === "" || cityMunicipality === "" || barangay === "" || profession === "" || licenseNo === "" || clinicAddress === "" || clinicTime === "") {
+    if (firstName === ""|| surName === "" || gender === "" || email === "" || region === "" || province === "" || cityMunicipality === "" || barangay === "") {
       setMessage({ error: true, msg: "Alert: You must fill in all required fields marked with an asterisk (*) to proceed with your submission." });
       return;
     }
 
-    const updatedServiceProvider = { 
+    const updatedAdmin = { 
       firstName,
       middleName,
       surName,
@@ -51,58 +47,52 @@ const EditSPForm = ({ uid }) => {
       province,
       cityMunicipality,
       barangay,
-      profession,
-      licenseNo,
-      clinicAddress,
-      clinicTime,
-      userType: "serviceProvider",
+      userType: "generalAdmin",
     //   accountStatus,
     };
 
     try {
       // Use the update function 
-      await ServiceProvidersDataService.updateServiceProvider(uid, updatedServiceProvider); 
-      setMessage({ error: false, msg: "Service Provider updated successfully!" });
+      await AdminDataService.updateAdmin(uid, updatedAdmin); 
+      setMessage({ error: false, msg: "Admin updated successfully!" });
       setIsModalOpen(true); // Open the modal on successful submission
     } catch (err) {
       setMessage({ error: true, msg: err.message });
     }
   };
 
-  // Fetch data for editing
-  const editHandler = async () => {
-    setMessage("");
-    try {
-      const docSnap = await ServiceProvidersDataService.getServiceProvider(uid);
-      console.log("The record is:", docSnap.data());
-      setfirstName(docSnap.data().firstName); 
-      setmiddleName(docSnap.data().middleName); 
-      setsurName(docSnap.data().surName); 
-      setgender(docSnap.data().gender); 
-      setemail(docSnap.data().email); 
-      setsuffix(docSnap.data().suffix); 
-      setregion(docSnap.data().region); 
-      setprovince(docSnap.data().province); 
-      setcityMunicipality(docSnap.data().cityMunicipality); 
-      setbarangay(docSnap.data().barangay); 
-      setprofession(docSnap.data().profession); 
-      setlicenseNo(docSnap.data().licenseNo); 
-      setclinicAddress(docSnap.data().clinicAddress); 
-      setclinicTime(docSnap.data().clinicTime);
-    } catch (err) {
-      setMessage({ error: true, msg: err.message });
-    }
-  };
+    // Fetch data for editing
+    const editHandler = async () => {
+      setMessage("");
+      try {
+        const docSnap = await AdminDataService.getAdmin(uid);
+        console.log("The record is:", docSnap.data());
+        setfirstName(docSnap.data().firstName); 
+        setmiddleName(docSnap.data().middleName); 
+        setsurName(docSnap.data().surName); 
+        setgender(docSnap.data().gender); 
+        setemail(docSnap.data().email); 
+        setsuffix(docSnap.data().suffix); 
+        setregion(docSnap.data().region); 
+        setprovince(docSnap.data().province); 
+        setcityMunicipality(docSnap.data().cityMunicipality); 
+        setbarangay(docSnap.data().barangay); 
+      } catch (err) {
+        setMessage({ error: true, msg: err.message });
+      }
+    };
+  
+    useEffect(() => {
+      console.log("The ID here is:", uid);
+      if (uid) {
+        editHandler();
+      }
+    }, [uid]);
+    
 
-  useEffect(() => {
-    console.log("The ID here is:", uid);
-    if (uid) {
-      editHandler();
-    }
-  }, [uid]);
-  
-  
-  
+
+
+
   return (
     <div className="flex h-screen">
               {/* Main content */}
@@ -128,13 +118,13 @@ const EditSPForm = ({ uid }) => {
             )}
 
             <button className="flex items-center gap-3 mb-4 font-poppins text-thin" size="sm">
-                <Link to="/ServiceProviders" className="flex items-center gap-2">
+                <Link to="/Administrators" className="flex items-center gap-2">
                 <ChevronLeftIcon strokeWidth={2} className="h-4 w-4" />
                 <span>Back</span>
                 </Link>
             </button>
 
-            <h1 className="text-[24px] text-black font-bold mb-6">Update Service Provider</h1>
+            <h1 className="text-[24px] text-black font-bold mb-6">Update Admin</h1>
             <form className="" onSubmit={handleSubmit}>
                 <Typography variant="h6" className="font-light text-[20px] mb-2 text-[#B8B7B7]">
                     Personal Information
@@ -321,79 +311,6 @@ const EditSPForm = ({ uid }) => {
                         />
                     </div>
                 </div>
-                <Typography variant="h6" className="font-light text-[20px] mb-2 mt-4 text-[#B8B7B7]">
-                    Field Information
-                </Typography>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                        <Typography variant="h6" color="blue-gray" className="mb-2">
-                            Profession/Role <span className="text-red-500">*</span>
-                        </Typography>
-                        <Input
-                            type="text"
-                            uid="profession"
-                            value={profession}
-                            onChange={(e) => setprofession(e.target.value)}
-                            size="lg"
-                            placeholder="Profession/Role"
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                            labelProps={{
-                                className: "before:content-none after:content-none",
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <Typography variant="h6" color="blue-gray" className="mb-2">
-                            License Number <span className="text-red-500">*</span>
-                        </Typography>
-                        <Input
-                            type="text"
-                            uid="licenseNo"
-                            value={licenseNo}
-                            onChange={(e) => setlicenseNo(e.target.value)}
-                            size="lg"
-                            placeholder="License Number"
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                            labelProps={{
-                                className: "before:content-none after:content-none",
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <Typography variant="h6" color="blue-gray" className="mb-2">
-                            Clinic Address <span className="text-red-500">*</span>
-                        </Typography>
-                        <Input
-                            type="text"
-                            uid="clinicAddress"
-                            value={clinicAddress}
-                            onChange={(e) => setclinicAddress(e.target.value)}
-                            size="lg"
-                            placeholder="Clinic Time"
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                            labelProps={{
-                                className: "before:content-none after:content-none",
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <Typography variant="h6" color="blue-gray" className="mb-2">
-                            Clinic Time <span className="text-red-500">*</span>
-                        </Typography>
-                        <Input
-                            type="text"
-                            uid="clinicTime"
-                            value={clinicTime}
-                            onChange={(e) => setclinicTime(e.target.value)}
-                            size="lg"
-                            placeholder="Clinic Time"
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                            labelProps={{
-                                className: "before:content-none after:content-none",
-                            }}
-                        />
-                    </div>
-                </div>
                 <Button type="submit" variant="outlined" className="mt-8">Update Account</Button>
             </form>
             {/* Modal Confirmation */}
@@ -414,4 +331,4 @@ const EditSPForm = ({ uid }) => {
   )
 }
 
-export default EditSPForm;
+export default EditAdminForm

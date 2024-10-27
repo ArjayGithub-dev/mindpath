@@ -1,23 +1,24 @@
 import React, { useState } from 'react'; 
 import { Link, useLocation, useParams } from "react-router-dom";
-import { Sidebar, EditSPForm } from '../components';
+import { Sidebar, EditClientAppointmentForm } from '../components';
 import { Cog6ToothIcon, UserCircleIcon, PowerIcon } from "@heroicons/react/24/solid"; 
 
-const EditServiceProvider = () => {
-    const { uid } = useParams(); // Extract the ID from the URL parameters
-    const location = useLocation();
-    const { serviceProviderID } = location.state || {};
+const EditClientAppointmentPage = () => {
 
-    console.log("Received Service Provider ID:", uid);
+  const { id } = useParams(); // Extract the ID from the URL parameters
+  const location = useLocation();
+  const { appointmentID } = location.state || {};
 
-    const [dropdownOpen, setDropdownOpen] = useState(false); // Initialize state for dropdown visibility
+  console.log("Received Appointment ID:", id);
 
-    const toggleDropdown = () => {
-        setDropdownOpen(!dropdownOpen); // Toggle dropdown visibility
-    };
+  const [dropdownOpen, setDropdownOpen] = useState(false); // Initialize state for dropdown visibility
 
-    return (
-        <div className="flex h-screen">
+  const toggleDropdown = () => {
+      setDropdownOpen(!dropdownOpen); // Toggle dropdown visibility
+  };
+
+  return (
+    <div className="flex h-screen">
             {/* Sidebar */}
             <Sidebar />
 
@@ -63,10 +64,10 @@ const EditServiceProvider = () => {
                         )}
                     </div>
                 </header>
-                <EditSPForm uid={uid} />
-            </div>       
-        </div>
-    )
+                <EditClientAppointmentForm id={id} />
+            </div>        
+    </div>
+  )
 }
 
-export default EditServiceProvider;
+export default EditClientAppointmentPage;

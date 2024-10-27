@@ -3,15 +3,7 @@ import { Link } from "react-router-dom";
 import { Cog6ToothIcon, UserCircleIcon, PowerIcon } from "@heroicons/react/24/solid"; 
 import { Sidebar, ServiceProviderList } from '../components'; 
 
-
 const ServiceProviders = () => {
-
-  // const [setServiceProviderID] = useState("");
-
-  // const getServiceProviderIDHandler = (id) => {
-  //   console.log("The ID of document to be edited", id);
-  //   setServiceProviderID(id);
-  // }
 
   const [dropdownOpen, setDropdownOpen] = useState(false); // Initialize state for dropdown visibility
 
@@ -67,11 +59,7 @@ const ServiceProviders = () => {
             )}
           </div>
         </header>
-
-        {/* <ServiceProviderList getServiceProviderID={getServiceProviderIDHandler} /> */}
         <ServiceProviderList />
-        
-
       </div>
     </div>
   );
