@@ -10,7 +10,7 @@ const Hero = () => {
         
         {/* Header Section */}
         <div className="flex flex-row justify-between items-center w-full mb-5">
-          <h1 className="flex-1 font-poppins font-bold ss:text-[48px] text-[28px] text-blue">
+          <h1 className="flex-1 font-poppins font-bold ss:text-[42px] text-[28px] text-blue">
             Expert Therapists at Your Fingertips Book Face-to-Face or Online Therapy Sessions Easily
           </h1>
         </div>

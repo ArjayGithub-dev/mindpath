@@ -43,14 +43,8 @@ const TABS = [
 const TABLE_HEAD = ["Fullname", "Profession", "Status", "Clinic Address & Time", "Actions"];
 
 const ServiceProviderList = () => {
-
   const [setServiceProviderID] = useState("");
-
-  const getServiceProviderIDHandler = (uid) => {
-    console.log("The ID of document to be edited", uid);
-    setServiceProviderID(uid);
-  }
-
+  const [searchTerm, setSearchTerm] = useState(""); // State for search term
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteSuccessOpen, setDeleteSuccessOpen] = useState(false); // State for success modal
   const [serviceProviders, setServiceProviders] = useState([]);
@@ -80,13 +74,38 @@ const ServiceProviderList = () => {
     setDeleteOpen(true);
   };
 
+  // Handle search input change
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+    setCurrentPage(1); // Reset to the first page when searching
+  };
+
+  // Filter service providers based on search term
+  const filteredProviders = serviceProviders.filter(provider => {
+    const fullName = `${provider.firstName ?? ''} ${provider.middleName ?? ''} ${provider.surName ?? ''} ${provider.suffix ?? ''}`.trim().toLowerCase();
+    const email = provider.email?.toLowerCase() ?? '';
+    const profession = provider.profession?.toLowerCase() ?? '';
+    const accountStatus = provider.accountStatus?.toLowerCase() ?? '';
+    const clinicAddress = provider.clinicAddress?.toLowerCase() ?? '';
+    const clinicTime = provider.clinicTime?.toLowerCase() ?? '';
+
+    return (
+      fullName.includes(searchTerm.toLowerCase()) ||
+      email.includes(searchTerm.toLowerCase()) ||
+      profession.includes(searchTerm.toLowerCase()) ||
+      accountStatus.includes(searchTerm.toLowerCase()) ||
+      clinicAddress.includes(searchTerm.toLowerCase()) ||
+      clinicTime.includes(searchTerm.toLowerCase())
+    );
+  });
+
   // Pagination logic
   const indexOfLastProvider = currentPage * providersPerPage;
   const indexOfFirstProvider = indexOfLastProvider - providersPerPage;
-  const currentProviders = serviceProviders.slice(indexOfFirstProvider, indexOfLastProvider);
+  const currentProviders = filteredProviders.slice(indexOfFirstProvider, indexOfLastProvider);
 
   const nextPage = () => {
-    if (currentPage < Math.ceil(serviceProviders.length / providersPerPage)) {
+    if (currentPage < Math.ceil(filteredProviders.length / providersPerPage)) {
       setCurrentPage(currentPage + 1);
     }
   };
@@ -155,14 +174,14 @@ const ServiceProviderList = () => {
                 <Input
                   label="Search"
                   icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+                  value={searchTerm}
+                  onChange={handleSearch}
                 />
               </div>
             </div>
-
           </CardHeader>
 
           <CardBody className="overflow-scroll px-0">
-
             <table className="mt-4 w-full min-w-max table-auto text-left">
               <thead>
                 <tr>
@@ -228,14 +247,14 @@ const ServiceProviderList = () => {
 
                       <td className={classes}>
                         <div className="w-max">
-                        <Typography
+                          <Typography
                             variant="small"
                             className={`font-normal ${
-                                doc.accountStatus === 'ACTIVE' ? 'bg-[#6EC531]' : 'bg-blue-gray-200'
+                              doc.accountStatus === 'ACTIVE' ? 'bg-[#6EC531]' : 'bg-blue-gray-200'
                             } text-white p-2 rounded`}
-                        >
+                          >
                             {doc.accountStatus}
-                        </Typography>
+                          </Typography>
                         </div>
                       </td>
 
@@ -261,19 +280,19 @@ const ServiceProviderList = () => {
                       <td className={classes}>
                         <Tooltip content="View or Update Account">
                           <IconButton variant="text">
-                          <Link 
-                            to={`/EditServiceProvider/${doc.uid}`}  // Pass the ID as a URL parameter
-                            className="flex items-center gap-2"
-                          >
-                            <PencilIcon className="h-4 w-4" />
-                          </Link>
-                          </IconButton>                         
+                            <Link
+                              to={`/EditServiceProvider/${doc.uid}`}  // Pass the ID as a URL parameter
+                              className="flex items-center gap-2"
+                            >
+                              <PencilIcon className="h-4 w-4" />
+                            </Link>
+                          </IconButton>
                         </Tooltip>
 
                         <Tooltip content="Delete Data">
-                          <IconButton variant="text"> 
-                            <TrashIcon className="h-4 w-4 text-red-600" 
-                            onClick={() => handleDeleteOpen(doc.uid)} />
+                          <IconButton variant="text">
+                            <TrashIcon className="h-4 w-4 text-red-600"
+                              onClick={() => handleDeleteOpen(doc.uid)} />
                           </IconButton>
                         </Tooltip>
                       </td>
@@ -282,23 +301,21 @@ const ServiceProviderList = () => {
                 })}
               </tbody>
             </table>
-
           </CardBody>
 
-            <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-              <Typography variant="small" color="blue-gray" className="font-normal">
-              Page {currentPage} of {Math.ceil(serviceProviders.length / providersPerPage)}
-              </Typography>
-              <div className="flex gap-2">
-                <Button variant="text" size="sm" onClick={prevPage} disabled={currentPage === 1}>
-                  Previous
-                </Button>
-                <Button variant="outlined" size="sm" onClick={nextPage} disabled={currentPage === Math.ceil(serviceProviders.length / providersPerPage)}>
-                  Next
-                </Button>
-              </div>
-            </CardFooter>
-          
+          <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
+            <Typography variant="small" color="blue-gray" className="font-normal">
+              Page {currentPage} of {Math.ceil(filteredProviders.length / providersPerPage)}
+            </Typography>
+            <div className="flex gap-2">
+              <Button variant="text" size="sm" onClick={prevPage} disabled={currentPage === 1}>
+                Previous
+              </Button>
+              <Button variant="outlined" size="sm" onClick={nextPage} disabled={currentPage === Math.ceil(filteredProviders.length / providersPerPage)}>
+                Next
+              </Button>
+            </div>
+          </CardFooter>
         </Card>
 
         {/* Delete Confirmation Modal */}

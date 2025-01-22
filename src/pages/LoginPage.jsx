@@ -56,12 +56,12 @@ const LoginPage = () => {
                         alt="MindPath" 
                         className="w-[200px] object-contain mx-auto mb-12" 
                     />
-                    <p className="font-poppins font-light text-gray-100 text-black ss:text-[18px] text-[16px] mt-10">
+                    <p className="font-poppins font-medium text-gray-100 text-black ss:text-[26px] text-[14px] mt-10">
                         Welcome Admin <span className="text-1xl wave"> &#128075; </span>
                     </p>
-                    <h1 className="font-poppins font-bold ss:text-[40px] text-[30px] text-black">
+                    {/* <h1 className="font-poppins font-bold ss:text-[40px] text-[30px] text-black">
                         Sign In Now
-                    </h1>
+                    </h1> */}
                 </div>
 
                 {/* Login Form */}

@@ -8,7 +8,7 @@ const Appointment = () => {
       <div className="text-center">
       {/* <p className="font-poppins font-thin text-white ss:text-[18px] text-[16px] mt-10">
           Empower Your Practice with Our Innovative App</p> */}
-        <h1 className="font-poppins font-bold ss:text-[48px] text-[38px] text-white mb-4 mt-4">
+        <h1 className="font-poppins font-bold ss:text-[42px] text-[38px] text-white mb-4 mt-4">
           Join Our Community of Professional Therapists
         </h1>
         <p className="font-poppins font-light text-white ss:text-[18px] text-[16px]">

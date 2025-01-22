@@ -13,6 +13,8 @@ import { db, auth } from '../firebase';
 import ServiceProvidersDataService from "../services/serviceproviders";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
+import emailjs from '@emailjs/browser';
+
 
 const checkEmailExists = async (email) => {
     const usersCollectionRef = collection(db, "users");
@@ -62,9 +64,38 @@ const AddServiceProvider = () => {
 
       const [newAccountEmail, setNewAccountEmail] = useState(""); // State to store the new account email
       const [newAccountPassword, setNewAccountPassword] = useState(""); // State to store the new account password
+    
+      // Generate a 7-character password
+    const password = generatePassword(7);
       
       const handleSubmit = async (e) => {
         e.preventDefault();
+
+        //Your EmailJS service ID, template ID, and Public Key
+        const serviceId = 'service_g9e03es';
+        const templateId = 'template_2f91m4d';
+        const publicKey = 'p3JShQscBfPKFgNIb';
+
+        //Create a new object that contains dynamic template parameters
+        const templateParams = {
+            from_name: 'MindPath',
+            from_email: email,
+            to_name: firstName,
+            temp_pass: password,
+        }; 
+
+        // Send the email using EmailJS
+        emailjs.send(serviceId, templateId, templateParams, publicKey)
+        .then((response) => {
+            console.log('Email send successfully!', response);
+            setfirstName('');
+            setemail('');
+            password('');
+        })
+        .catch((error) => {
+            console.error('Error sending email:', error);
+        });
+
         setMessage("");
     
         // Validate required fields
@@ -93,8 +124,8 @@ const AddServiceProvider = () => {
             return;
         }
     
-        // Generate a 7-character password
-        const password = generatePassword(7);
+        // // Generate a 7-character password
+        // const password = generatePassword(7);
     
         const newServiceProvider = {
             firstName,
@@ -197,12 +228,6 @@ const AddServiceProvider = () => {
                         {/* Dropdown Menu */}
                         {dropdownOpen && (
                             <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md py-2 z-10">
-                                <Link to="/Profile">
-                                    <a className="flex items-center px-4 py-2 hover:bg-gray-100 font-poppins">
-                                        <UserCircleIcon className="h-5 w-5 mr-2" />
-                                        My Profile
-                                    </a>
-                                </Link>
                                 <Link to="/Settings">
                                     <a className="flex items-center px-4 py-2 hover:bg-gray-100 font-poppins">
                                         <Cog6ToothIcon className="h-5 w-5 mr-2" />
@@ -314,7 +339,7 @@ const AddServiceProvider = () => {
                                     id="gender"
                                     value={suffix}
                                     onChange={(e) => setsuffix(e.target.value)}
-                                    className="w-full border border-t-blue-gray-200  focus:border-t-gray-900 px-4 py-2 rounded-lg text-gray-700"
+                                    className="w-full border border-t-blue-gray-200 focus:border-t-gray-900 px-4 py-2 rounded-lg text-gray-700"
                                     >
                                     <option value="" disabled>
                                         -- Select Suffix --
@@ -327,7 +352,7 @@ const AddServiceProvider = () => {
                                 </select>
                             </div>                       
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2  gap-4 mt-4">
                                 <div>
                                     <Typography variant="h6" color="blue-gray" className="mb-2">
                                         Email <span className="text-red-500">*</span>
@@ -351,7 +376,7 @@ const AddServiceProvider = () => {
                                     </Typography>
                                     <select
                                         id="gender"
-                                        className="select select-bordered w-full max-w-xs"
+                                        className="w-full border border-t-blue-gray-200 focus:border-t-gray-900 px-4 py-2 rounded-lg text-gray-700"
                                         value={gender}
                                         onChange={(e) => setgender(e.target.value)}
                                         >

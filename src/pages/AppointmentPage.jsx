@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import styles from "../style";
-import { Navbar, Footer, TermsConditions, } from "../components";
+import { Navbar, Footer, TermsConditions } from "../components";
 import ApppointmentDataService from "../services/appointment.service";
+import ReCAPTCHA from "react-google-recaptcha";
 
 
 const AppointmentPage = () => {
-
-  useEffect(() => {
-    // Scroll to the top of the page when the component is mounted
-    window.scrollTo(0, 0);
-  }, []);
-
-
   const [firstname, setfirstname] = useState("");
   const [middlename, setmiddlename] = useState("");
   const [surname, setsurname] = useState("");
@@ -22,17 +18,18 @@ const AppointmentPage = () => {
   const [province, setprovince] = useState("");
   const [cityMunicipality, setcityMunicipality] = useState("");
   const [barangay, setbarangay] = useState("");
-  const [dateTime, setdateTime] = useState("");
-  const [isAgree, setisAgree] = useState("");
-
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [isAgree, setisAgree] = useState(false);
   const [message, setMessage] = useState({ error: false, msg: "" });
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState("");
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
-
-    // Validate required fields
+  
     if (
       firstname === "" || 
       surname === "" || 
@@ -42,10 +39,15 @@ const AppointmentPage = () => {
       province === "" ||
       cityMunicipality === "" ||
       barangay === "" ||
-      dateTime === "" ||
-      isAgree === "" 
+      !selectedDate ||
+      !selectedTime ||
+      !isAgree
     ) {
       setMessage({ error: true, msg: "Alert: You must fill in all required fields marked with an asterisk (*) to proceed with your submission." });
+      return;
+    }
+    if (!recaptchaToken) {
+      setMessage({ error: true, msg: "Please complete the reCAPTCHA verification." });
       return;
     }
 
@@ -60,20 +62,24 @@ const AppointmentPage = () => {
       province,
       cityMunicipality,
       barangay,
-      dateTime,
+      selectedDate: new Date(Date.UTC(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        selectedDate.getDate()
+      )).toISOString().split('T')[0], // Store date as ISO string in UTC
+      selectedTime: selectedTime.toTimeString().split(' ')[0], // Store time as HH:MM:SS
       isAgree,
       status: "Upcoming",
     };
-
+  
     try {
       await ApppointmentDataService.addAppointment(newAppointment);
       setMessage({ error: false, msg: "Appointment Booked Successfully!" });
-      setIsModalOpen(true); // Open the modal on successful submission
+      setIsModalOpen(true);
     } catch (err) {
       setMessage({ error: true, msg: err.message });
     }
-
-    // Clear form fields after submission
+  
     setfirstname("");
     setmiddlename("");
     setsurname("");
@@ -84,34 +90,52 @@ const AppointmentPage = () => {
     setprovince("");
     setcityMunicipality("");
     setbarangay("");
-    setdateTime("");
-    setisAgree("");
+    setSelectedDate(null);
+    setSelectedTime(null);
+    setisAgree(false);
+    setRecaptchaToken(""); // Reset reCAPTCHA token
   };
 
-    // Scroll to the top when there is an error message
-    useEffect(() => {
-      if (message.error) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    }, [message]);
+  useEffect(() => {
+    if (message.error) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [message]);
+  
 
-    
+  const availableTimes = [
+    { label: "8:00am", value: new Date().setHours(8, 0, 0, 0) },
+    { label: "9:00am", value: new Date().setHours(9, 0, 0, 0) },
+    { label: "10:00am", value: new Date().setHours(10, 0, 0, 0) },
+    { label: "11:00am", value: new Date().setHours(11, 0, 0, 0) },
+    { label: "1:00pm", value: new Date().setHours(13, 0, 0, 0) },
+    { label: "2:00pm", value: new Date().setHours(14, 0, 0, 0) },
+    { label: "3:00pm", value: new Date().setHours(15, 0, 0, 0) },
+  ];
+
+  const filterPassedTime = (time) => {
+    const currentDate = new Date();
+    const selectedDate = new Date(time);
+
+    return currentDate.getTime() < selectedDate.getTime();
+  };
+
+  const onReCAPTCHAChange = (token) => {
+    setRecaptchaToken(token);
+  };
+  
 
   return (
     <>
       <div className="w-full overflow-hidden">
-        {/* Navbar Section */}
         <div className={`bg-dirtywhite ${styles.paddingX} ${styles.flexCenter}`}>
           <div className={`${styles.boxWidth}`}>
             <Navbar />
           </div>
         </div>
 
-        {/* Form Section */}
         <div className={`bg-dirtywhite w-full py-12 ${styles.paddingX} ${styles.flexCenter}`}>
           <div className={`${styles.boxWidth}`}>
-
-            {/* Conditional Warning Alert */}
             {message.error && (
               <div role="alert" className="alert alert-warning mb-4">
                 <svg
@@ -132,14 +156,13 @@ const AppointmentPage = () => {
             )}
 
             <h2 className="font-poppins text-[30px] font-semibold mb-6">Appointment Schedule</h2>
-              <p className="font-poppins font-light text-gray text-[16px] mb-2">
-                Please provide your accurate personal details to help us process your appointment efficiently.
-              </p> 
+            <p className="font-poppins font-light text-gray text-[16px] mb-2">
+              Please provide your accurate personal details to help us process your appointment efficiently.
+            </p>
 
             <form className="p-8 w-full max-w-[600px]" onSubmit={handleSubmit}>
               <h2 className="font-poppins text-[24px] font-light mt-8 mb-2">Personal Information</h2>
 
-              {/* Firstname */}
               <div className="mb-4">
                 <label htmlFor="firstname" className="block font-poppins text-gray-700 font-medium mb-2">
                   Firstname <span className="text-red-500">*</span>
@@ -154,7 +177,6 @@ const AppointmentPage = () => {
                 />
               </div>
 
-              {/* Middlename */}
               <div className="mb-4">
                 <label htmlFor="middlename" className="block font-poppins text-gray-700 font-medium mb-2">
                   Middlename
@@ -169,7 +191,6 @@ const AppointmentPage = () => {
                 />
               </div>
 
-              {/* Surname */}
               <div className="mb-4">
                 <label htmlFor="surname" className="block font-poppins text-gray-700 font-medium mb-2">
                   Surname <span className="text-red-500">*</span>
@@ -182,12 +203,11 @@ const AppointmentPage = () => {
                   value={surname}
                   onChange={(e) => setsurname(e.target.value)}
                 />
-              </div>     
+              </div>
 
-              {/* Suffix */}
               <div className="mb-4">
                 <label htmlFor="suffix" className="block font-poppins text-gray-700 font-medium mb-2">
-                  Suffix 
+                  Suffix
                 </label>
                 <select
                   id="suffix"
@@ -195,7 +215,7 @@ const AppointmentPage = () => {
                   value={suffix}
                   onChange={(e) => setsuffix(e.target.value)}
                 >
-                  <option value="" disabled>
+                  <option value="">
                     -- Select Suffix --
                   </option>
                   <option value="Jr.">Jr.</option>
@@ -206,7 +226,6 @@ const AppointmentPage = () => {
                 </select>
               </div>
 
-              {/* Gender */}
               <div className="mb-4">
                 <label htmlFor="gender" className="block font-poppins text-gray-700 font-medium mb-2">
                   Gender <span className="text-red-500">*</span>
@@ -219,13 +238,12 @@ const AppointmentPage = () => {
                 >
                   <option value="" disabled>
                     -- Select Gender --
-                    </option>
+                  </option>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
                 </select>
               </div>
 
-              {/* Email */}
               <div className="mb-4">
                 <label htmlFor="email" className="block font-poppins text-gray-700 font-medium mb-2">
                   Email Address <span className="text-red-500">*</span>
@@ -242,7 +260,6 @@ const AppointmentPage = () => {
 
               <h2 className="font-poppins text-[24px] font-semilight mt-8 mb-6">Complete Address</h2>
 
-              {/* Region */}
               <div className="mb-4">
                 <label htmlFor="region" className="block font-poppins text-gray-700 font-medium mb-2">
                   Region <span className="text-red-500">*</span>
@@ -257,7 +274,6 @@ const AppointmentPage = () => {
                 />
               </div>
 
-              {/* Province */}
               <div className="mb-4">
                 <label htmlFor="province" className="block font-poppins text-gray-700 font-medium mb-2">
                   Province <span className="text-red-500">*</span>
@@ -272,7 +288,6 @@ const AppointmentPage = () => {
                 />
               </div>
 
-              {/* City/Municipality */}
               <div className="mb-4">
                 <label htmlFor="cityMunicipality" className="block font-poppins text-gray-700 font-medium mb-2">
                   City/Municipality <span className="text-red-500">*</span>
@@ -287,7 +302,6 @@ const AppointmentPage = () => {
                 />
               </div>
 
-              {/* Barangay */}
               <div className="mb-4">
                 <label htmlFor="barangay" className="block font-poppins text-gray-700 font-medium mb-2">
                   Barangay <span className="text-red-500">*</span>
@@ -304,57 +318,89 @@ const AppointmentPage = () => {
 
               <h2 className="font-poppins text-[24px] font-light mt-8 mb-6">Appointment Schedule</h2>
 
-              {/* Date and Time */}
               <div className="mb-4">
                 <label htmlFor="dateTime" className="block font-poppins text-gray-700 font-medium mb-2">
-                  Preferred Date and Time <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="datetime-local"
-                  id="dateTime"
+                  Select Date <span className="text-red-500">*</span>
+                </label>  
+                <DatePicker
+                  selected={selectedDate}
+                  onChange={(date) => setSelectedDate(date)}
+                  minDate={new Date()}
+                  dateFormat="MM/dd/yyyy"
                   className="input input-bordered input-md w-full max-w-xs"
-                  value={dateTime}
-                  onChange={(e) => setdateTime(e.target.value)}
                 />
               </div>
 
-             {/* Terms & Conditions */}
-             <div className="mb-4 flex items-center mt-8">
-              <input 
-                type="checkbox" 
-                id="isAgree"
-                className="checkbox checkbox-sm mr-2"
-                checked={isAgree} // Use checked instead of value
-                onChange={(e) => setisAgree(e.target.checked)} // Use e.target.checked to get the boolean value
-              />
-              <p className="font-poppins font-light text-gray text-[14px]">
-                I have read and agree to the 
-                <span 
-                className="text-[#0093FD] cursor-pointer ml-1" 
-                onClick={() => document.getElementById('my_modal_1').showModal()}>
-                 terms and conditions
-          </span>.
-              </p>
-            </div>
+              {selectedDate && (
+                <div className="mb-4">
+                  <label htmlFor="time" className="block font-poppins text-gray-700 font-medium mb-2">
+                    Select Time <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    id="time"
+                    className="select select-bordered w-full max-w-xs"
+                    value={selectedTime ? selectedTime.getTime() : ""}
+                    onChange={(e) => setSelectedTime(new Date(parseInt(e.target.value)))}
+                  >
+                    <option value="" disabled>
+                      -- Select Time --
+                    </option>
+                    {availableTimes.map((time) => (
+                      <option
+                        key={time.value}
+                        value={time.value}
+                        // disabled={!filterPassedTime(time.value)}
+                      >
+                        {time.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
-            <TermsConditions />
+              <div className="mb-4 flex items-center mt-8">
+                <input
+                  type="checkbox"
+                  id="isAgree"
+                  className="checkbox checkbox-sm mr-2"
+                  checked={isAgree}
+                  onChange={(e) => setisAgree(e.target.checked)}
+                />
+                <p className="font-poppins font-light text-gray text-[14px]">
+                  I have read and agree to the
+                  <span
+                    className="text-[#0093FD] cursor-pointer ml-1"
+                    onClick={() => document.getElementById('my_modal_1').showModal()}
+                  >
+                    terms and conditions
+                  </span>.
+                </p>
+              </div>
 
-          <button type="submit" className="btn btn-wide font-poppins font-bold bg-blue text-white rounded-md px-[160px] mt-4">
-            Submit
-          </button>
+              <TermsConditions />
 
+            
+
+                <div className="mt-6">
+                <ReCAPTCHA
+                  sitekey="6Lcwxb4qAAAAAMjfcKm436rjZIQ5puXSwrpNBBZP" // Replace with your site key
+                  onChange={onReCAPTCHAChange}
+                />
+              </div>
+
+              <button type="submit" className="btn btn-wide font-poppins font-bold bg-blue text-white rounded-md px-[160px] mt-4">
+                Submit
+              </button>
             </form>
           </div>
         </div>
 
-        {/* Modal Confirmation */}
         {isModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center z-50">
             <div className="modal modal-open">
               <div className="modal-box">
                 <h2 className="font-poppins font-bold text-lg py-4">Your appointment has been booked! 🎉</h2>
-                <p>We’ve sent you a confirmation email with the details of your booking. 
-                Please check your inbox for further instructions.</p>
+                <p>We’ve sent you a confirmation email with the details of your booking. Please check your inbox for further instructions.</p>
                 <div className="modal-action">
                   <button className="btn" onClick={() => setIsModalOpen(false)}>Close</button>
                 </div>
@@ -363,8 +409,7 @@ const AppointmentPage = () => {
           </div>
         )}
 
-        {/* Footer Section */}
-        <div className={`bg-dirtywhite ${styles.paddingX} ${styles.flexStart} `}>
+        <div className={`bg-dirtywhite ${styles.paddingX} ${styles.flexStart}`}>
           <div className={`${styles.boxWidth}`}>
             <Footer />
           </div>

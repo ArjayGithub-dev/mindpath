@@ -36,12 +36,6 @@ const Appointment = () => {
             {/* Dropdown Menu */}
             {dropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md py-2 z-10">
-                <Link to="/Profile">
-                  <a className="flex items-center px-4 py-2 hover:bg-gray-100 font-poppins">
-                    <UserCircleIcon className="h-5 w-5 mr-2" />
-                    My Profile
-                  </a>
-                </Link>
                 <Link to="/Settings">
                   <a className="flex items-center px-4 py-2 hover:bg-gray-100 font-poppins">
                     <Cog6ToothIcon className="h-5 w-5 mr-2" />

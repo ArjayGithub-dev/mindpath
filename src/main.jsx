@@ -19,6 +19,9 @@ import {
   EditClientAppointment,
   AddAdmin,
   EditAdmin,
+  ChangePassword,
+  Availability,
+  MindPathLogin,
 } from "./pages";
 import EditSPForm from './components/EditSPForm.jsx';
 import EditAdminForm from './components/EditAdminForm.jsx';
@@ -43,6 +46,10 @@ const router = createBrowserRouter([
   {
     path: "AppointmentPage",
     element: <AppointmentPage />,
+  },
+  {
+    path: "MindPathLogin",
+    element: <MindPathLogin />,
   },
   {
     path: "LoginPage",
@@ -103,6 +110,14 @@ const router = createBrowserRouter([
   {
     path: "EditClientAppointmentForm",
     element: <ProtectedRoute element={<EditClientAppointmentForm />} />, 
+  },
+  {
+    path: "ChangePassword",
+    element: <ProtectedRoute element={<ChangePassword />} />, 
+  },
+  {
+    path: "Availability",
+    element: <ProtectedRoute element={<Availability />} />, 
   },
 ]);
 

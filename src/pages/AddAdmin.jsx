@@ -181,12 +181,6 @@ const AddAdmin = () => {
                 {/* Dropdown Menu */}
                 {dropdownOpen && (
                     <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md py-2 z-10">
-                        <Link to="/Profile">
-                            <a className="flex items-center px-4 py-2 hover:bg-gray-100 font-poppins">
-                                <UserCircleIcon className="h-5 w-5 mr-2" />
-                                My Profile
-                            </a>
-                        </Link>
                         <Link to="/Settings">
                             <a className="flex items-center px-4 py-2 hover:bg-gray-100 font-poppins">
                                 <Cog6ToothIcon className="h-5 w-5 mr-2" />
@@ -311,7 +305,7 @@ const AddAdmin = () => {
                         </select>
                     </div>                       
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2  gap-4 mt-4">
                         <div>
                             <Typography variant="h6" color="blue-gray" className="mb-2">
                                 Email <span className="text-red-500">*</span>
@@ -335,7 +329,7 @@ const AddAdmin = () => {
                             </Typography>
                             <select
                                 id="gender"
-                                className="select select-bordered w-full max-w-xs"
+                                className="w-full border border-t-blue-gray-200 focus:border-t-gray-900 px-4 py-2 rounded-lg text-gray-700" 
                                 value={gender}
                                 onChange={(e) => setgender(e.target.value)}
                                 >

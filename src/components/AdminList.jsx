@@ -43,20 +43,14 @@ const TABS = [
 const TABLE_HEAD = ["Fullname", "Status", "Actions"];
 
 const AdminList = () => {
-
   const [setAdminID] = useState("");
-
-  const getAdminIDHandler = (uid) => {
-    console.log("The ID of document to be edited", uid);
-    setAdminID(uid);
-  }
-
+  const [searchTerm, setSearchTerm] = useState(""); // State for search term
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteSuccessOpen, setDeleteSuccessOpen] = useState(false); // State for success modal
   const [Admin, setAdmin] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const adminsPerPage = 5;
-  const [adminToDelete, setAdminToDelete] = useState(null); // Track provider to delete
+  const [adminToDelete, setAdminToDelete] = useState(null); // Track admin to delete
 
   useEffect(() => {
     getAdmins();
@@ -72,21 +66,40 @@ const AdminList = () => {
     await AdminDataService.deleteAdmin(uid);
     setDeleteOpen(false); // Close delete confirmation modal
     setDeleteSuccessOpen(true); // Open success modal
-    getAdmins(); // Refresh the service provider list
+    getAdmins(); // Refresh the admin list
   };
 
   const handleDeleteOpen = (uid) => {
-    setAdminToDelete(uid); // Set the provider ID to delete
+    setAdminToDelete(uid); // Set the admin ID to delete
     setDeleteOpen(true);
   };
+
+  // Handle search input change
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+    setCurrentPage(1); // Reset to the first page when searching
+  };
+
+  // Filter admins based on search term
+  const filteredAdmins = Admin.filter(admin => {
+    const fullName = `${admin.firstName ?? ''} ${admin.middleName ?? ''} ${admin.surName ?? ''} ${admin.suffix ?? ''}`.trim().toLowerCase();
+    const email = admin.email?.toLowerCase() ?? '';
+    const accountStatus = admin.accountStatus?.toLowerCase() ?? '';
+
+    return (
+      fullName.includes(searchTerm.toLowerCase()) ||
+      email.includes(searchTerm.toLowerCase()) ||
+      accountStatus.includes(searchTerm.toLowerCase())
+    );
+  });
 
   // Pagination logic
   const indexOfLastAdmin = currentPage * adminsPerPage;
   const indexOfFirstAdmin = indexOfLastAdmin - adminsPerPage;
-  const currentAdmins = Admin.slice(indexOfFirstAdmin, indexOfLastAdmin);
+  const currentAdmins = filteredAdmins.slice(indexOfFirstAdmin, indexOfLastAdmin);
 
   const nextPage = () => {
-    if (currentPage < Math.ceil(Admin.length / adminsPerPage)) {
+    if (currentPage < Math.ceil(filteredAdmins.length / adminsPerPage)) {
       setCurrentPage(currentPage + 1);
     }
   };
@@ -96,7 +109,6 @@ const AdminList = () => {
       setCurrentPage(currentPage - 1);
     }
   };
-
 
   return (
     <div className="flex h-screen">
@@ -156,14 +168,14 @@ const AdminList = () => {
                 <Input
                   label="Search"
                   icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+                  value={searchTerm}
+                  onChange={handleSearch}
                 />
               </div>
             </div>
-
           </CardHeader>
 
           <CardBody className="overflow-scroll px-0">
-
             <table className="mt-4 w-full min-w-max table-auto text-left">
               <thead>
                 <tr>
@@ -217,34 +229,33 @@ const AdminList = () => {
 
                       <td className={classes}>
                         <div className="w-max">
-                        <Typography
+                          <Typography
                             variant="small"
                             className={`font-normal ${
-                                doc.accountStatus === 'ACTIVE' ? 'bg-[#6EC531]' : 'bg-blue-gray-200'
+                              doc.accountStatus === 'ACTIVE' ? 'bg-[#6EC531]' : 'bg-blue-gray-200'
                             } text-white p-2 rounded`}
-                        >
+                          >
                             {doc.accountStatus}
-                        </Typography>
+                          </Typography>
                         </div>
                       </td>
-
 
                       <td className={classes}>
                         <Tooltip content="View or Update Account">
                           <IconButton variant="text">
-                          <Link 
-                            to={`/EditAdmin/${doc.uid}`}  // Pass the ID as a URL parameter
-                            className="flex items-center gap-2"
-                          >
-                            <PencilIcon className="h-4 w-4" />
-                          </Link>
-                          </IconButton>                         
+                            <Link
+                              to={`/EditAdmin/${doc.uid}`}  // Pass the ID as a URL parameter
+                              className="flex items-center gap-2"
+                            >
+                              <PencilIcon className="h-4 w-4" />
+                            </Link>
+                          </IconButton>
                         </Tooltip>
 
                         <Tooltip content="Delete Data">
-                          <IconButton variant="text"> 
-                            <TrashIcon className="h-4 w-4 text-red-600" 
-                            onClick={() => handleDeleteOpen(doc.uid)} />
+                          <IconButton variant="text">
+                            <TrashIcon className="h-4 w-4 text-red-600"
+                              onClick={() => handleDeleteOpen(doc.uid)} />
                           </IconButton>
                         </Tooltip>
                       </td>
@@ -253,30 +264,28 @@ const AdminList = () => {
                 })}
               </tbody>
             </table>
-
           </CardBody>
 
-            <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-              <Typography variant="small" color="blue-gray" className="font-normal">
-              Page {currentPage} of {Math.ceil(Admin.length / adminsPerPage)}
-              </Typography>
-              <div className="flex gap-2">
-                <Button variant="text" size="sm" onClick={prevPage} disabled={currentPage === 1}>
-                  Previous
-                </Button>
-                <Button variant="outlined" size="sm" onClick={nextPage} disabled={currentPage === Math.ceil(Admin.length / adminsPerPage)}>
-                  Next
-                </Button>
-              </div>
-            </CardFooter>
-          
+          <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
+            <Typography variant="small" color="blue-gray" className="font-normal">
+              Page {currentPage} of {Math.ceil(filteredAdmins.length / adminsPerPage)}
+            </Typography>
+            <div className="flex gap-2">
+              <Button variant="text" size="sm" onClick={prevPage} disabled={currentPage === 1}>
+                Previous
+              </Button>
+              <Button variant="outlined" size="sm" onClick={nextPage} disabled={currentPage === Math.ceil(filteredAdmins.length / adminsPerPage)}>
+                Next
+              </Button>
+            </div>
+          </CardFooter>
         </Card>
 
         {/* Delete Confirmation Modal */}
         <Dialog open={deleteOpen} handler={() => setDeleteOpen(false)}>
           <DialogHeader>Confirm Deletion</DialogHeader>
           <DialogBody>
-            Are you sure you want to delete this service provider?
+            Are you sure you want to delete this admin?
           </DialogBody>
           <DialogFooter>
             <Button variant="text" color="gray" onClick={() => setDeleteOpen(false)}>
@@ -292,7 +301,7 @@ const AdminList = () => {
         <Dialog open={deleteSuccessOpen} handler={() => setDeleteSuccessOpen(false)}>
           <DialogHeader>Success</DialogHeader>
           <DialogBody>
-            Service provider deleted successfully!
+            Admin deleted successfully!
           </DialogBody>
           <DialogFooter>
             <Button variant="outlined" color="gray" onClick={() => setDeleteSuccessOpen(false)}>

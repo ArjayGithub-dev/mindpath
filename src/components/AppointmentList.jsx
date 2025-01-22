@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { PencilIcon, UserPlusIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { PencilIcon, UserPlusIcon, TrashIcon, ClipboardDocumentListIcon } from "@heroicons/react/24/solid";
+import { format } from 'date-fns';
 import {
     Card,
     CardHeader,
@@ -44,51 +45,65 @@ const TABLE_HEAD = ["Name", "Address", "Gender", "Status", "Date & Time", "Actio
 const AppointmentList = () => {
 
     const [setAppointmentID] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
 
     const getAppointmentIDHandler = (id) => {
       console.log("The ID of document to be edited", id);
       setAppointmentID(id);
     }
 
-const [deleteOpen, setDeleteOpen] = React.useState(false);
-const handleDeleteOpen = () => setDeleteOpen(!deleteOpen);
+    const [deleteOpen, setDeleteOpen] = React.useState(false);
+    const handleDeleteOpen = () => setDeleteOpen(!deleteOpen);
 
+    const [appointments, setAppointments] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const appointmentsPerPage = 5;
 
-const [appointments, setAppointments] = useState([]);
-const [currentPage, setCurrentPage] = useState(1);
-const appointmentsPerPage = 5;
+    useEffect(() => {
+      getAppointments();
+    }, []);
 
-useEffect(() => {
-  getAppointments();
-}, []);
+    const getAppointments = async() => {
+      const data = await ApppointmentDataService.getAllAppointments();
+      console.log(data.docs);
+      setAppointments(data.docs.map((doc) =>({ ...doc.data(), id: doc.id})))
+    };
 
-
-const getAppointments = async() => {
-  const data = await ApppointmentDataService.getAllAppointments();
-  console.log(data.docs);
-  setAppointments(data.docs.map((doc) =>({ ...doc.data(), id: doc.id})))
-};
-
-const deleteHandler = async(id) => {
-  await ApppointmentDataService.deleteAppointment(id);
-  getAppointments();
-}
+    const deleteHandler = async(id) => {
+      await ApppointmentDataService.deleteAppointment(id);
+      getAppointments();
+    }
 
     // Pagination logic
     const indexOfLastAppointments = currentPage * appointmentsPerPage;
     const indexOfFirstAppointmens = indexOfLastAppointments - appointmentsPerPage;
-    const currentAppointments = appointments.slice(indexOfFirstAppointmens, indexOfLastAppointments);
-  
+    const currentAppointments = appointments
+      .filter(appointment => 
+        `${appointment.firstname} ${appointment.middlename || ''} ${appointment.surname} ${appointment.suffix || ''}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        appointment.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        appointment.barangay.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        appointment.cityMunicipality.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        appointment.province.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        appointment.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        appointment.status.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .slice(indexOfFirstAppointmens, indexOfLastAppointments);
+
     const nextPage = () => {
       if (currentPage < Math.ceil(appointments.length / appointmentsPerPage)) {
         setCurrentPage(currentPage + 1);
       }
     };
-  
+
     const prevPage = () => {
       if (currentPage > 1) {
         setCurrentPage(currentPage - 1);
       }
+    };
+
+    const handleSearch = (event) => {
+      setSearchTerm(event.target.value);
+      setCurrentPage(1); // Reset to the first page when searching
     };
 
   return (
@@ -127,9 +142,14 @@ const deleteHandler = async(id) => {
               />
             </svg>
           </Button>
-            {/* <Button variant="outlined" className="flex items-center gap-3" size="sm"> 
-              <UserPlusIcon strokeWidth={2} className="h-4 w-4"  /> Add Appointment
-            </Button> */}
+
+          {/* <Button color="light-blue" className="flex items-center gap-3" size="sm">
+            <Link to="/Availability" className="flex items-center gap-2">
+              <ClipboardDocumentListIcon strokeWidth={2} className="h-4 w-4" />
+              <span>Set Availability</span>
+            </Link>
+          </Button> */}
+          
           </div>
         </div>
 
@@ -148,6 +168,8 @@ const deleteHandler = async(id) => {
                   <Input
                     label="Search"
                     icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+                    value={searchTerm}
+                    onChange={handleSearch}
                   />
                 </div>
               </div>
@@ -155,10 +177,6 @@ const deleteHandler = async(id) => {
             </CardHeader>
             
             <CardBody className="overflow-scroll px-0">
-
-            {/* <div className="mt-4 ml-5">
-              <Button variant="outlined" onClick={getAppointments}>Refresh Table</Button>
-            </div> */}
 
                {/* <pre>{JSON.stringify(appointments, undefined, 2)}</pre>  */}
 
@@ -266,16 +284,18 @@ const deleteHandler = async(id) => {
                             </div>
                         </td>
 
+                          
+                        <td className={classes}>
+                          <Typography variant="small" color="blue-gray" className="font-normal">
+                            {(() => {
+                              const date = new Date(`${doc.selectedDate}T${doc.selectedTime}`);
+                              const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
+                              const optionsTime = { hour: 'numeric', minute: 'numeric', hour12: true };
+                              return `${date.toLocaleDateString('en-US', optionsDate)} at ${date.toLocaleTimeString('en-US', optionsTime)}`;
+                            })()}
+                          </Typography>
+                        </td>
 
-                          <td className={classes}>
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal"
-                            >
-                              {doc.dateTime instanceof Object && doc.dateTime.seconds ? new Date(doc.dateTime.seconds * 1000).toLocaleString() : doc.dateTime}
-                            </Typography>
-                          </td>
 
                           <td className={classes}>
                             <Tooltip content="Update Status">
@@ -350,4 +370,4 @@ const deleteHandler = async(id) => {
   )
 }
 
-export default AppointmentList
+export default AppointmentList;

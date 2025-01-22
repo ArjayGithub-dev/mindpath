@@ -1,15 +1,8 @@
 import React, { useState } from 'react'; 
 import { Link, useLocation, useParams } from "react-router-dom";
-import { Sidebar, EditAdminForm } from '../components';
-import { Cog6ToothIcon, UserCircleIcon, PowerIcon } from "@heroicons/react/24/solid"; 
-
-const EditAdmin = () => {
-
-  const { uid } = useParams(); // Extract the ID from the URL parameters
-  const location = useLocation();
-  const { adminID } = location.state || {};
-
-  console.log("Received Admin ID:", uid);
+import { Sidebar } from '../components';
+import { Cog6ToothIcon, PowerIcon } from "@heroicons/react/24/solid"; 
+const Availability = () => {
 
   const [dropdownOpen, setDropdownOpen] = useState(false); // Initialize state for dropdown visibility
 
@@ -18,6 +11,7 @@ const EditAdmin = () => {
   };
 
   return (
+  
     <div className="flex h-screen">
     {/* Sidebar */}
     <Sidebar />
@@ -26,8 +20,8 @@ const EditAdmin = () => {
     <div className="flex-1 flex flex-col">
         {/* Header */}
         <header className="flex justify-between items-center p-6 bg-white">
-            {/* Title */}
-            <h1 className="font-poppins text-[24px] text-[#757575] font-light"></h1>
+          {/* Title */}
+          <h1 className="font-poppins text-[24px] text-[#757575] font-light"></h1>
 
             {/* Profile Dropdown */}
             <div className="relative">
@@ -58,10 +52,12 @@ const EditAdmin = () => {
                 )}
             </div>
         </header>
-        <EditAdminForm uid={uid} />
     </div>       
 </div>
+
+
   )
 }
 
-export default EditAdmin
+export default Availability
+

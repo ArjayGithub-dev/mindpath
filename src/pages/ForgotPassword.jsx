@@ -28,12 +28,11 @@ const ForgotPassword = () => {
             alt="MindPath" 
             className="w-[200px] object-contain mx-auto mb-12" 
         />
-        <h1 className="font-poppins font-bold ss:text-[40px] text-[30px] text-black">
-            Forgot Password
-        </h1>
+        <h1 className="font-poppins font-bold ss:text-[40px] text-[30px] text-black">Forgot Password</h1>
+        <p className="text-[#4b5563] font-poppins mt-2">
+            Once you submit, a reset link will be sent to your email's inbox to reset your password.</p>
     </div>
-
-    {/* Login Form */}
+    {/* Reset Password Form */}
     <div className="flex flex-col items-center dirtyWhite">
         <div className="card bg-white max-w-md shrink-0">                
             <form className="card-body" onSubmit={(e) => handleSubmit(e)}>
@@ -49,11 +48,9 @@ const ForgotPassword = () => {
                         required
                     />
                 </div>
-
                 <button type="submit" className="btn font-poppins font-medium bg-blue text-white rounded-md px-[160px] mt-4">
                     Submit
                 </button>
-                
             </form>
         </div>
     </div>

@@ -13,6 +13,9 @@ import ForgotPassword from "./ForgotPassword";
 import EditClientAppointment from "./EditClientAppointment";
 import AddAdmin from "./AddAdmin";
 import EditAdmin from "./EditAdmin";
+import ChangePassword from "./ChangePassword";
+import Availability from "./Availability";
+import MindPathLogin from "./MindPathLogin";
 
 
 export {
@@ -31,4 +34,7 @@ export {
   EditClientAppointment,
   EditAdmin,
   AddAdmin,
+  ChangePassword,
+  Availability,
+  MindPathLogin,
 };
