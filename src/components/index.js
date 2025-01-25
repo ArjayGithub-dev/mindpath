@@ -13,6 +13,7 @@ import AppointmentList from "./AppointmentList";
 import EditClientAppointmentForm from "./EditClientAppointmentForm";
 import EditAdminForm from "./EditAdminForm";
 import AdminList from "./AdminList";
+import Faq from "./Faq";
 
 
 
@@ -32,4 +33,5 @@ export {
   EditClientAppointmentForm,
   EditAdminForm,
   AdminList,
+  Faq,
 };

@@ -36,8 +36,8 @@ const Footer = () => (
       </div>
     </div>
 
-    <div className="w-full flex justify-center items-center md:flex-row flex-col pt-6">
-      <p className="font-poppins font-normal text-center text-[18px] leading-[27px] text-gray">
+    <div className="w-full flex justify-center items-center md:flex-row flex-col pt-6 mt-8">
+      <p className="font-poppins font-normal text-center text-[14px] leading-[27px] text-gray">
         © 2024 MindPath. All Rights Reserved
       </p>
     </div>

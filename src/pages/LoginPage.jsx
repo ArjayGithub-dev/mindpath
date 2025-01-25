@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { mindpath } from '../assets';
+import { mindpath, logo } from '../assets';
 import { getFirestore, doc, getDoc } from 'firebase/firestore'; // Import Firestore functions
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/solid";
 
@@ -52,16 +52,23 @@ const LoginPage = () => {
             <div className="w-full overflow-hidden">
                 <div className="text-center mt-[150px]">
                     <img 
-                        src={mindpath} 
+                        src={logo} 
                         alt="MindPath" 
-                        className="w-[200px] object-contain mx-auto mb-12" 
+                        className="w-[120px] object-contain mx-auto" 
                     />
-                    <p className="font-poppins font-medium text-gray-100 text-black ss:text-[26px] text-[14px] mt-10">
+                    {/* <p className="font-poppins font-medium text-gray-100 text-black ss:text-[26px] text-[14px] mt-10">
                         Welcome Admin <span className="text-1xl wave"> &#128075; </span>
+                    </p> */}
+                    <p className="font-poppins font-medium text-gray-100 text-black text-[30px] mt-6 mb-4">
+                        Welcome Admin 
                     </p>
-                    {/* <h1 className="font-poppins font-bold ss:text-[40px] text-[30px] text-black">
-                        Sign In Now
-                    </h1> */}
+                    
+                    <div className="text-center">
+                        <a className="font-poppins text-blue-500 hover:underline">
+                            <Link to="/">Don't have an account yet? </Link>
+                        </a>
+                    </div>
+                    
                 </div>
 
                 {/* Login Form */}
@@ -71,11 +78,12 @@ const LoginPage = () => {
                             {error && <p className="text-red-500">{error}</p>} {/* Display error message */}
                             <div className="form-control">  
                                 <label className="label">
-                                    <span className="block font-poppins text-gray-700 font-medium">Email</span>
+                                    <span className="block font-poppins text-gray-700 font-medium"></span>
                                 </label>
                                 <input
                                     type="email"
-                                    className="input input-bordered font-poppins"
+                                    className="input input-bordered font-poppins bg-red"
+                                    placeholder='Email'
                                     required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -84,12 +92,13 @@ const LoginPage = () => {
 
                             <div className="form-control">
                             <label className="label">
-                                <span className="block font-poppins text-gray-700 font-medium">Password</span>
+                                <span className="block font-poppins text-gray-700 font-medium"></span>
                             </label>
                             <div className="relative w-full">
                                 <input
                                 type={passwordShown ? "text" : "password"}
                                 className="input input-bordered font-poppins w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
+                                placeholder='Password'
                                 required
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -105,18 +114,20 @@ const LoginPage = () => {
                                 )}
                                 </span>
                             </div>
-                            </div>
 
-                            <button type="submit" className="btn btn-wide font-poppins font-bold bg-blue text-white rounded-md px-[160px] mt-4">
-                                Login
-                            </button>
-                            
                             {/* Forgot Password Link */}
-                            <div className="text-center mt-4">
+                            <div className="mt-4 text-right">   
                                 <a className="font-poppins text-blue-500 hover:underline">
                                 <Link to="/ForgotPassword">Forgot Password? </Link>
                                 </a>
                             </div>
+
+                            </div>
+
+                            <button type="submit" className="btn btn-wide font-poppins font-bold bg-blue text-white rounded-xl px-[160px] mt-2">
+                                Login
+                            </button>
+                            
                         </form>
                     </div>
                 </div>

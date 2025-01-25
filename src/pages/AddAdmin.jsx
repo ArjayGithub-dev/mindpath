@@ -13,6 +13,8 @@ import { db, auth } from '../firebase';
 import AdminDataService from "../services/admin";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
+import emailjs from '@emailjs/browser';
+
 
 const checkEmailExists = async (email) => {
     const adminCollectionRef = collection(db, "users");
@@ -59,9 +61,38 @@ const AddAdmin = () => {
 
       const [newAccountEmail, setNewAccountEmail] = useState(""); // State to store the new account email
       const [newAccountPassword, setNewAccountPassword] = useState(""); // State to store the new account password
-      
+    
+        // Generate a 7-character password
+        const password = generatePassword(7);
+
       const handleSubmit = async (e) => {
         e.preventDefault();
+
+        //Your EmailJS service ID, template ID, and Public Key
+        const serviceId = 'service_g9e03es';
+        const templateId = 'template_k5z60rd';
+        const publicKey = 'p3JShQscBfPKFgNIb';
+
+        //Create a new object that contains dynamic template parameters
+        const templateParams = {
+            from_name: 'MindPath',
+            from_email: email,
+            to_name: firstName,
+            temp_pass: password,
+        }; 
+
+        // Send the email using EmailJS
+        emailjs.send(serviceId, templateId, templateParams, publicKey)
+        .then((response) => {
+            console.log('Email send successfully!', response);
+            setfirstName('');
+            setemail('');
+            password('');
+        })
+        .catch((error) => {
+            console.error('Error sending email:', error);
+        });
+
         setMessage("");
     
         // Validate required fields
@@ -85,9 +116,7 @@ const AddAdmin = () => {
             setMessage({ error: true, msg: "Email already exists. Please use a different email." });
             return;
         }
-    
-        // Generate a 7-character password
-        const password = generatePassword(7);
+
     
         const newAdmin = {
             firstName,
@@ -426,7 +455,7 @@ const AddAdmin = () => {
         <h2 className="font-poppins font-bold text-lg py-4">New Account Added! 🎉</h2>
         {/* <p>Email: {newAccountEmail}</p>
         <p>Password: {newAccountPassword}</p> */}
-        <p>Account credentials (email and password) have been sent to {newAccountEmail}.</p>
+         <p>Account credentials have been sent to {newAccountEmail}. Please inform the user to check their inbox.</p>
         <div className="modal-action">
           <button className="btn" onClick={() => setIsModalOpen(false)}>Close</button>
         </div>

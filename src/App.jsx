@@ -1,5 +1,5 @@
 import styles from "./style";
-import { Navbar, Hero, Appointment, Footer, CopyRight } from 
+import { Navbar, Hero, Appointment, Footer, CopyRight, Faq} from 
 "./components";
 
 
@@ -21,6 +21,12 @@ const App = () => (
     <div className={`appointmentBg ${styles.paddingX} ${styles.flexStart}`}>
       <div className={`${styles.boxWidth}`}>
         <Appointment /> 
+      </div>
+    </div>
+
+    <div className={`bg-dirtywhite ${styles.paddingX} ${styles.flexStart}`}>
+      <div className={`${styles.boxWidth}`}>
+        <Faq /> 
       </div>
     </div>
 

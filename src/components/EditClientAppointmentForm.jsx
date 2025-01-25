@@ -154,6 +154,7 @@ const EditClientAppointmentForm = ({ id }) => {
                             size="lg"
                             placeholder="Firstname"
                             className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                            readOnly
                             labelProps={{
                                 className: "before:content-none after:content-none",
                             }}
@@ -171,6 +172,7 @@ const EditClientAppointmentForm = ({ id }) => {
                             size="lg"
                             placeholder="Middlename"
                             className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                            readOnly
                             labelProps={{
                                 className: "before:content-none after:content-none",
                             }}
@@ -188,6 +190,7 @@ const EditClientAppointmentForm = ({ id }) => {
                             size="lg"
                             placeholder="Surname"
                             className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                            readOnly
                             labelProps={{
                                 className: "before:content-none after:content-none",
                             }}
@@ -203,6 +206,7 @@ const EditClientAppointmentForm = ({ id }) => {
                                 onChange={(e) => setsuffix(e.target.value)}
                                 className="w-full border border-t-blue-gray-200  focus:border-t-gray-900 px-4 py-2 rounded-lg text-gray-700"
                             >
+                                readOnly
                                 <option value="" disabled>
                                     -- Select Suffix --
                                 </option>
@@ -227,6 +231,7 @@ const EditClientAppointmentForm = ({ id }) => {
                                 size="lg"
                                 placeholder="Email"
                                 className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                                readOnly
                                 labelProps={{
                                     className: "before:content-none after:content-none",
                                 }}
@@ -240,6 +245,7 @@ const EditClientAppointmentForm = ({ id }) => {
                                 id="gender"
                                 value={gender}
                                 onChange={(e) => setgender(e.target.value)}
+                                readOnly
                                 className="w-full border border-t-blue-gray-200 focus:border-t-gray-900 px-4 py-2 rounded-lg text-gray-700"
                             >
                                 <option value="" disabled>
@@ -266,6 +272,7 @@ const EditClientAppointmentForm = ({ id }) => {
                             size="lg"
                             placeholder="Region"
                             className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                            readOnly
                             labelProps={{
                                 className: "before:content-none after:content-none",
                             }}
@@ -283,6 +290,7 @@ const EditClientAppointmentForm = ({ id }) => {
                             size="lg"
                             placeholder="Province"
                             className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                            readOnly
                             labelProps={{
                                 className: "before:content-none after:content-none",
                             }}
@@ -300,6 +308,7 @@ const EditClientAppointmentForm = ({ id }) => {
                             size="lg"
                             placeholder="City/Municipality"
                             className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                            readOnly
                             labelProps={{
                                 className: "before:content-none after:content-none",
                             }}
@@ -317,6 +326,7 @@ const EditClientAppointmentForm = ({ id }) => {
                             size="lg"
                             placeholder="Barangay"
                             className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                            readOnly
                             labelProps={{
                                 className: "before:content-none after:content-none",
                             }}

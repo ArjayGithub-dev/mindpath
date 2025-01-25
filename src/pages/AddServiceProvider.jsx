@@ -193,9 +193,6 @@ const AddServiceProvider = () => {
             }
         }, [message]);
         
-    
-
-    
 
     const [dropdownOpen, setDropdownOpen] = useState(false); // Initialize state for dropdown visibility
 
@@ -546,7 +543,7 @@ const AddServiceProvider = () => {
                 <h2 className="font-poppins font-bold text-lg py-4">New Account Added! 🎉</h2>
                 {/* <p>Email: {newAccountEmail}</p>
                 <p>Password: {newAccountPassword}</p> */}
-                <p>Account credentials (email and password) have been sent to {newAccountEmail}.</p>
+                <p>Account credentials have been sent to {newAccountEmail}. Please inform the user to check their inbox.</p>
                 <div className="modal-action">
                   <button className="btn" onClick={() => setIsModalOpen(false)}>Close</button>
                 </div>
