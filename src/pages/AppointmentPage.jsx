@@ -5,6 +5,7 @@ import styles from "../style";
 import { Navbar, Footer, TermsConditions } from "../components";
 import ApppointmentDataService from "../services/appointment.service";
 import ReCAPTCHA from "react-google-recaptcha";
+import emailjs from '@emailjs/browser';
 
 
 const AppointmentPage = () => {
@@ -28,6 +29,36 @@ const AppointmentPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+        //Your EmailJS service ID, template ID, and Public Key
+        const serviceId = 'service_qcn24tm';
+        const templateId = 'template_agjoaxd';
+        const publicKey = 'RMzCHUu0PKTUfZGo4';
+
+        //Create a new object that contains dynamic template parameters
+        const templateParams = {
+            from_name: 'MindPath',
+            from_email: email,
+            to_name: firstname,
+            selectedDate: selectedDate,
+            selectedTime: selectedTime,
+        }; 
+
+        // Send the email using EmailJS
+        emailjs.send(serviceId, templateId, templateParams, publicKey)
+        .then((response) => {
+            console.log('Email send successfully!', response);
+            setfirstname('');
+            setemail('');
+            setSelectedDate('');
+            setSelectedTime('');
+            password('');
+        })
+        .catch((error) => {
+            console.error('Error sending email:', error);
+        });
+
+        
     setMessage("");
   
     if (
@@ -127,14 +158,14 @@ const AppointmentPage = () => {
 
   return (
     <>
-      <div className="w-full overflow-hidden">
-        <div className={`bg-dirtywhite ${styles.paddingX} ${styles.flexCenter}`}>
-          <div className={`${styles.boxWidth}`}>
-            <Navbar />
+      <div className="w-full bg-dirtywhite overflow-hidden">
+      <div className={`bg-dirtywhite border border-b border-[#f6f4fa] border-[1px] ${styles.paddingX} ${styles.flexCenter} shadow-sm fixed top-0 left-0 w-full z-50`}>
+        <div className={`${styles.boxWidth}`}>
+          <Navbar />
           </div>
         </div>
 
-        <div className={`bg-dirtywhite w-full py-12 ${styles.paddingX} ${styles.flexCenter}`}>
+        <div className={`bg-dirtywhite w-full py-12 ${styles.paddingX} ${styles.flexCenter} mt-[100px]`}>
           <div className={`${styles.boxWidth}`}>
             {message.error && (
               <div role="alert" className="alert alert-warning mb-4">
@@ -409,9 +440,9 @@ const AppointmentPage = () => {
           </div>
         )}
 
-        <div className={`bg-dirtywhite ${styles.paddingX} ${styles.flexStart}`}>
+        <div className={`bg-blue ${styles.paddingX} ${styles.flexStart}`}>
           <div className={`${styles.boxWidth}`}>
-            <Footer />
+            <Footer /> 
           </div>
         </div>
       </div>

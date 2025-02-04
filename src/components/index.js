@@ -14,7 +14,7 @@ import EditClientAppointmentForm from "./EditClientAppointmentForm";
 import EditAdminForm from "./EditAdminForm";
 import AdminList from "./AdminList";
 import Faq from "./Faq";
-
+import MindPathProcess from "./MindPathProcess";
 
 
 export {
@@ -34,4 +34,5 @@ export {
   EditAdminForm,
   AdminList,
   Faq,
+  MindPathProcess,
 };

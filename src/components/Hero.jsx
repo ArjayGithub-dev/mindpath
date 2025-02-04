@@ -16,7 +16,7 @@ const Hero = () => {
         </div>
 
         {/* Paragraph Section */}
-        <p className={`${styles.paragraph} font-poppins font-normal text-gray-600 max-w-[850px] mb-10`}>
+        <p className={`${styles.paragraph} font-poppins font-normal text-gray/70 max-w-[850px] mb-10`}>
           Find licensed therapists and book personalized sessions anytime, anywhere. Whether you’re addressing mental health, stress management, or personal growth, we’re here to support you. 
         </p>
       </div>

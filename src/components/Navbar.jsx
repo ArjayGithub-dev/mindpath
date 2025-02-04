@@ -8,7 +8,7 @@ const Navbar = () => {
   const location = useLocation();
 
   return (
-    <nav className="w-full flex py-6 justify-between items-center navbar relative">
+    <nav className="w-full flex py-4 justify-between items-center navbar relative">
       {/* Left side: Logo */}
       <div className="flex items-center">
         <a href="/">
@@ -18,12 +18,15 @@ const Navbar = () => {
 
 
       {/* Right side: Contact Us */}
-      <div className="hidden md:flex items-center space-x-6">    
+      <div className="hidden md:flex items-center space-x-2">    
         <li className="list-none gradient-button font-poppins font-regular font-white text-gray cursor-pointer text-[16px] rounded-[30px]">
           <Link to="/AboutPage">About</Link>
         </li>
         <li className="list-none gradient-button font-poppins font-regular font-white text-gray cursor-pointer text-[16px] px-6 py-3 rounded-[30px]">
           <Link to="/ContactUsPage">Contact Us</Link>
+        </li>
+        <li href="#" className="list-none font-poppins font-medium text-white cursor-pointer text-[14px] bg-blue px-4 py-2 rounded-lg border border-blue-600">
+          Find a therapist 
         </li>
       </div>   
 

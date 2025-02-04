@@ -20,16 +20,20 @@ export const navLinks = [
 
 export const faqs = [
   {
-    question: "Q1. What is MindPath?",
+    question: "What is MindPath Online Therapy?",
     answer: "MindPath is a platform that connects you with licensed therapists, making it easy to book face-to-face or online therapy sessions. Whether you're seeking support for mental health, stress management, or personal growth, MindPath is here to help.",
   },
   {
-    question: "Q2. Are all therapists on MindPath licensed professionals?",
-    answer: "Yes, all therapists on MindPath are verified and licensed professionals with expertise in various areas, including mental health, stress management, and personal development.",
+    question: "Is online therapy effective?",
+    answer: "Online therapy is proven to be as effective, if not more effective than face-to-face therapy. A study conducted by Talkspace & the Journal of Telemedicine and e-Health showed that text-based therapy through MindPath was highly effective and comparable to traditional therapy. MindPath also generated greater satisfaction in terms of its delivery, accessibility, and affordability.",
   },
   {
-    question: "Q3. Can I choose between online and face-to-face sessions?",
+    question: "Can I choose between online and face-to-face sessions?",
     answer: "Absolutely! MindPath gives you the flexibility to choose between online therapy sessions or face-to-face meetings based on your preference and convenience.",
+  },
+  {
+    question: "Are therapy sessions confidential?",
+    answer: "Yes, all therapy sessions on MindPath are completely confidential. Our platform uses secure technology to ensure your privacy is protected at all times.",
   },
 ];
 
