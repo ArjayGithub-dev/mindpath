@@ -12,6 +12,7 @@ import threads from "./threads.png";
 import videocall from "./videocall.jpg";
 import pr1 from "./pr1.jpg";
 import pr2 from "./pr2.jpg";
+import missiondisplayphoto from "./aboutimg.jpg";
 
 export { 
     mindpath,
@@ -28,4 +29,5 @@ export {
     videocall,
     pr1,
     pr2,
+    missiondisplayphoto,
 };

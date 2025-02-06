@@ -25,11 +25,11 @@ const App = () => (
       </div>
     </div>
 
-    {/* <div className={`bg-dirtywhite ${styles.paddingX} ${styles.flexStart}`}>
+    <div className={`bg-dirtywhite ${styles.paddingX} ${styles.flexStart}`}>
       <div className={`${styles.boxWidth}`}>
         <MindPathProcess /> 
       </div>
-    </div> */}
+    </div>
 
     <div className={`bg-[#d5e4f1] ${styles.paddingX} ${styles.flexStart}`}>
       <div className={`${styles.boxWidth}`}>
@@ -38,7 +38,7 @@ const App = () => (
     </div>
 
     <div className={`bg-blue ${styles.paddingX} ${styles.flexStart}`}>
-      <div className={`${styles.boxWidth}`}>
+      <div className={`${styles.boxWidthNavBar}`}>
         <Footer /> 
       </div>
     </div>

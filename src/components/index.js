@@ -15,7 +15,9 @@ import EditAdminForm from "./EditAdminForm";
 import AdminList from "./AdminList";
 import Faq from "./Faq";
 import MindPathProcess from "./MindPathProcess";
-
+import AboutPageHero from "./AboutPageHero";
+import AboutPageContent from "./AboutPageContent";
+import ContactPageHero from "./ContactPageHero";
 
 export {
   Navbar,
@@ -35,4 +37,7 @@ export {
   AdminList,
   Faq,
   MindPathProcess,
+  AboutPageHero,
+  AboutPageContent,
+  ContactPageHero,
 };

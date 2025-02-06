@@ -1,5 +1,5 @@
 import React from 'react'
-import { Navbar, Footer } from "../components";
+import { Navbar, Footer, ContactPageHero } from "../components";
 import styles from '../style';
 
 
@@ -9,6 +9,12 @@ const ContactUsPage = () => {
     <div className={`bg-dirtywhite border border-b border-[#f6f4fa] border-[1px] ${styles.paddingX} ${styles.flexCenter} shadow-sm fixed top-0 left-0 w-full z-50`}>
       <div className={`${styles.boxWidthNavBar}`}>
         <Navbar />
+      </div>
+    </div>
+
+    <div className={`bg-whtite mt-[100px] ${styles.paddingX} ${styles.flexCenter}`}>
+      <div className={`${styles.boxWidth}`}>
+        <ContactPageHero />
       </div>
     </div>
 

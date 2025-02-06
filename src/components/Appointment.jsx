@@ -49,7 +49,8 @@ const Appointment = () => {
   return (
     <section id="trusted-clients" className={`flex flex-col items-center ${styles.paddingY}`}>
       <div className="text-center">
-        <h1 className="font-poppins font-bold ss:text-[42px] text-[38px] text-white mb-4 mt-[50px]">
+      <span className="font-poppins block text-xs font-medium tracking-widest text-center uppercase text-white">Join us now</span>
+        <h1 className="font-poppins font-bold ss:text-[42px] text-[38px] text-white mb-4 mt-[20px]">
           Join Our Community of Professional Therapists
         </h1>
         <p className="font-poppins font-light text-white/80 ss:text-[18px] text-[16px]">
