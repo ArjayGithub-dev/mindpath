@@ -38,7 +38,7 @@ const App = () => (
     </div>
 
     <div className={`bg-blue ${styles.paddingX} ${styles.flexStart}`}>
-      <div className={`${styles.boxWidthNavBar}`}>
+      <div className={`${styles.boxWidth}`}>
         <Footer /> 
       </div>
     </div>
