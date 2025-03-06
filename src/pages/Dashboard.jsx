@@ -131,7 +131,7 @@ const Dashboard = () => {
         {/* Header */}
         <header className="flex justify-between items-center p-6 bg-white">
           {/* Title */}
-          <h1 className="font-poppins text-[24px] text-[#757575] font-light">Hello, Arjay <span className="text-1xl wave"> &#128075; </span> </h1>
+          <h1 className="font-poppins text-[24px] text-[#757575] font-light">Hello, Admin<span className="text-1xl wave"> &#128075; </span> </h1>
 
           {/* Profile Dropdown */}
           <div className="relative">

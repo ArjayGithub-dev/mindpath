@@ -68,7 +68,7 @@ const Sidebar = () => {
               Appointments
             </Link>
             <ListItemSuffix>
-              <Chip value="18" size="sm" variant="ghost" color="blue-gray" className="rounded-full" />
+              <Chip value="" size="sm" variant="ghost" color="blue-gray" className="rounded-full" />
             </ListItemSuffix>
           </ListItem>
           <ListItem className={`font-poppins ${getLinkClass("/ServiceProviders")}`}>
@@ -79,7 +79,7 @@ const Sidebar = () => {
               Service Providers
             </Link>
             <ListItemSuffix>
-              <Chip value="50" size="sm" variant="ghost" color="blue-gray" className="rounded-full" />
+              <Chip value="" size="sm" variant="ghost" color="blue-gray" className="rounded-full" />
             </ListItemSuffix>
           </ListItem>
           <ListItem className={`font-poppins ${getLinkClass("/Administrators")}`}>
@@ -90,7 +90,7 @@ const Sidebar = () => {
               Administrators
             </Link>
             <ListItemSuffix>
-              <Chip value="1" size="sm" variant="ghost" color="blue-gray" className="rounded-full" />
+              <Chip value="" size="sm" variant="ghost" color="blue-gray" className="rounded-full" />
             </ListItemSuffix>
           </ListItem>
         </List>
