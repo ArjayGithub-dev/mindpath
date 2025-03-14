@@ -24,7 +24,7 @@ const AppointmentPage = () => {
   const [isAgree, setisAgree] = useState(false);
   const [message, setMessage] = useState({ error: false, msg: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [recaptchaToken, setRecaptchaToken] = useState("");
+  // const [recaptchaToken, setRecaptchaToken] = useState("");
   
 
   const handleSubmit = async (e) => {
@@ -77,10 +77,10 @@ const AppointmentPage = () => {
       setMessage({ error: true, msg: "Alert: You must fill in all required fields marked with an asterisk (*) to proceed with your submission." });
       return;
     }
-    if (!recaptchaToken) {
-      setMessage({ error: true, msg: "Please complete the reCAPTCHA verification." });
-      return;
-    }
+    // if (!recaptchaToken) {
+    //   setMessage({ error: true, msg: "Please complete the reCAPTCHA verification." });
+    //   return;
+    // }
 
     const newAppointment = {
       firstname,
@@ -124,7 +124,7 @@ const AppointmentPage = () => {
     setSelectedDate(null);
     setSelectedTime(null);
     setisAgree(false);
-    setRecaptchaToken(""); // Reset reCAPTCHA token
+    // setRecaptchaToken(""); // Reset reCAPTCHA token
   };
 
   useEffect(() => {
@@ -151,9 +151,9 @@ const AppointmentPage = () => {
     return currentDate.getTime() < selectedDate.getTime();
   };
 
-  const onReCAPTCHAChange = (token) => {
-    setRecaptchaToken(token);
-  };
+  // const onReCAPTCHAChange = (token) => {
+  //   setRecaptchaToken(token);
+  // };
   
 
   return (
@@ -412,12 +412,12 @@ const AppointmentPage = () => {
 
             
 
-                <div className="mt-6">
+                {/* <div className="mt-6">
                 <ReCAPTCHA
-                  sitekey="6Lcwxb4qAAAAAMjfcKm436rjZIQ5puXSwrpNBBZP" // Replace with your site key
+                  sitekey="6LdBFtkqAAAAAFcBKw1J57quAI5PuPYG1GNLUtfz" // Replace with your site key
                   onChange={onReCAPTCHAChange}
                 />
-              </div>
+              </div> */}
 
               <button type="submit" className="btn btn-wide font-poppins font-bold bg-blue text-white rounded-md px-[160px] mt-4">
                 Submit

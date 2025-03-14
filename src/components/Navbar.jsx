@@ -26,8 +26,11 @@ const Navbar = () => {
           <Link to="/ContactUsPage">Contact Us</Link>
         </li>
         <li href="#" className="list-none font-poppins font-medium text-white cursor-pointer text-[14px] bg-blue px-4 py-2 rounded-lg border border-blue-600">
-          Find a therapist 
+        <Link to="/MindPathLogin">Login</Link>
         </li>
+        {/* <li href="#" className="list-none font-poppins font-medium text-white cursor-pointer text-[14px] bg-blue px-4 py-2 rounded-lg border border-blue-600">
+          Find a therapist 
+        </li> */}
       </div>   
 
       {/* Hamburger Menu Icon */}
